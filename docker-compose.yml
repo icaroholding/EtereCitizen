@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
+      - BASE_MAINNET_RPC_URL=https://mainnet.base.org
+      - CITIZEN_REPUTATION_ADDRESS=0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843
+      - PINATA_API_KEY=${PINATA_API_KEY}
+      - PINATA_SECRET_KEY=${PINATA_SECRET_KEY}
+    restart: unless-stopped

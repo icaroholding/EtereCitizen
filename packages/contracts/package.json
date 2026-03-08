@@ -1,0 +1,25 @@
+{
+  "name": "@eterecitizen/contracts",
+  "version": "0.1.0",
+  "description": "Smart contracts for EtereCitizen protocol (reputation, identity)",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network base-sepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.ts --network base",
+    "verify": "hardhat run scripts/verify.ts",
+    "clean": "hardhat clean && rm -rf dist",
+    "build": "hardhat compile",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "hardhat": "^2.22.0",
+    "typescript": "^5.4.0"
+  },
+  "license": "Apache-2.0"
+}
