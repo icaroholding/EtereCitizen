@@ -42,6 +42,9 @@ typechain-types/
 *.log
 npm-debug.log*
 
+# Changelog (local only)
+changelog/
+
 # Claude Code
 CLAUDE.md
 .claude/

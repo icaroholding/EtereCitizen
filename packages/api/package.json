@@ -12,9 +12,9 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@eterecitizen/sdk": "workspace:*",
     "@hono/node-server": "^1.11.0",
-    "hono": "^4.4.0"
+    "hono": "^4.4.0",
+    "viem": "^2.15.0"
   },
   "devDependencies": {
     "@types/node": "^25.3.5",

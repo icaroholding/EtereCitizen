@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { EtereCitizen } from '@eterecitizen/sdk';
+import { verifyAgent } from '../lib/verifier.js';
 
 export const identityCardRoutes = new Hono();
 
@@ -7,22 +7,10 @@ identityCardRoutes.get('/card/:did', async (c) => {
   const did = decodeURIComponent(c.req.param('did'));
 
   try {
-    const result = await EtereCitizen.verify(did);
-
-    const card = {
-      did: result.did,
-      verificationLevel: result.verificationLevel,
-      categoryRatings: result.categoryRatings,
-      overallScore: result.reputationScore,
-      reviewCount: result.reviewCount,
-      walletConnected: result.walletConnected,
-      agentAge: result.agentAge,
-      verified: result.verified,
-      flags: result.flags,
-    };
-
-    return c.json(card);
+    const result = await verifyAgent(did);
+    return c.json(result);
   } catch (error) {
-    return c.json({ error: 'Failed to fetch identity card' }, 500);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return c.json({ error: 'Failed to fetch identity card', details: message }, 500);
   }
 });

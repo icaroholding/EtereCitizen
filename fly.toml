@@ -1,27 +1,38 @@
-app = "eterecitizen-api"
-primary_region = "fra"
+# fly.toml app configuration file generated for eterecitizen-api on 2026-03-08T09:58:29+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'eterecitizen-api'
+primary_region = 'fra'
 
 [build]
-  dockerfile = "packages/api/Dockerfile"
+  dockerfile = 'packages/api/Dockerfile'
 
 [env]
-  NODE_ENV = "production"
-  PORT = "3000"
-  BASE_SEPOLIA_RPC_URL = "https://sepolia.base.org"
-  BASE_MAINNET_RPC_URL = "https://mainnet.base.org"
-  CITIZEN_REPUTATION_ADDRESS = "0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843"
-  CORS_ORIGINS = "https://eterecitizen.io,https://www.eterecitizen.io"
+  BASE_MAINNET_RPC_URL = 'https://mainnet.base.org'
+  BASE_SEPOLIA_RPC_URL = 'https://sepolia.base.org'
+  CITIZEN_REPUTATION_ADDRESS = '0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843'
+  CORS_ORIGINS = 'https://eterecitizen.io,https://www.eterecitizen.io'
+  NODE_ENV = 'production'
+  PORT = '3000'
 
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
 
-[[http_service.checks]]
-  grace_period = "10s"
-  interval = "30s"
-  method = "GET"
-  path = "/api/health"
-  timeout = "5s"
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/api/health'
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 1024
