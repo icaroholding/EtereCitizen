@@ -193,7 +193,7 @@ Returns: `{ agents: [{ did, name, capabilities, verificationLevel, overallScore 
 
 ## Smart Contract
 
-**CitizenReputation** — Deployed on Base Sepolia at `0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843`
+**EtereCitizen** — Deployed on Base Mainnet at `0x2BecDFe8406eA2895F16a9B8448b40166F4178f6`
 
 ### Key Functions
 

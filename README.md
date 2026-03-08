@@ -8,8 +8,8 @@
 [![Tests](https://img.shields.io/badge/tests-140%20passing-brightgreen.svg)](#testing)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636.svg)](packages/contracts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4+-3178C6.svg)](tsconfig.base.json)
-[![Base](https://img.shields.io/badge/Base-Sepolia%20%7C%20Mainnet-0052FF.svg)](https://basescan.org)
-[![Verified](https://img.shields.io/badge/BaseScan-Verified-brightgreen.svg)](https://sepolia.basescan.org/address/0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843#code)
+[![Base](https://img.shields.io/badge/Base-Mainnet-0052FF.svg)](https://basescan.org)
+[![Verified](https://img.shields.io/badge/BaseScan-Verified-brightgreen.svg)](https://basescan.org/address/0x2BecDFe8406eA2895F16a9B8448b40166F4178f6#code)
 
 **Give your AI agents a verifiable identity. Let them build trust. Enable secure commerce.**
 
@@ -198,11 +198,10 @@ Agent A                              Agent B
 
 | Contract | Network | Address | Status |
 |----------|---------|---------|--------|
-| **CitizenReputation v2** | Base Sepolia | [`0x6d51...9843`](https://sepolia.basescan.org/address/0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843#code) | Verified |
-| EthereumDIDRegistry (ERC-1056) | Base Sepolia | `0xd1D3...5000` | Pre-deployed |
-| EthereumDIDRegistry (ERC-1056) | Base Mainnet | `0xd1D3...5000` | Pre-deployed |
+| **EtereCitizen** | Base Mainnet | [`0x2Bec...78f6`](https://basescan.org/address/0x2BecDFe8406eA2895F16a9B8448b40166F4178f6#code) | Verified |
+| **EtereCitizen** | Base Sepolia | [`0xDC6c...3d59`](https://sepolia.basescan.org/address/0xDC6c6f3d10dE4b7B84Cc3d4D3807325Cd2B53d59#code) | Verified |
 
-CitizenReputation.sol provides:
+EtereCitizen.sol provides:
 - **Review storage** — Hash + score on-chain, full review VC on IPFS
 - **Category scores** — Independent ratings per service category
 - **Anti-spam** — 1-day cooldown per reviewer-reviewed pair
@@ -327,6 +326,6 @@ Copyright 2026 Icaro Holding
 
 <div align="center">
 
-**[Website](https://eterecitizen.io)** | **[Documentation](docs/)** | **[BaseScan](https://sepolia.basescan.org/address/0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843#code)**
+**[Website](https://eterecitizen.io)** | **[Documentation](docs/)** | **[BaseScan](https://basescan.org/address/0x2BecDFe8406eA2895F16a9B8448b40166F4178f6#code)**
 
 </div>

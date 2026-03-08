@@ -1,16 +1,14 @@
 /**
  * Lightweight verifier for the API server.
- * Uses viem for on-chain reads. DID resolution is address-based
- * (ERC-1056 is not yet deployed on Base Sepolia, so we derive the
- * default DID document from the Ethereum address).
+ * Reads identity + reputation from the unified EtereCitizen contract via viem.
  */
 import { createPublicClient, http } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 
-const REPUTATION_CONTRACT = (process.env.REPUTATION_CONTRACT_ADDRESS ||
-  '0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843') as `0x${string}`;
+const CONTRACT_ADDRESS = (process.env.ETERECITIZEN_CONTRACT_ADDRESS ||
+  '0x2BecDFe8406eA2895F16a9B8448b40166F4178f6') as `0x${string}`;
 
-const RPC_URL = process.env.BASE_SEPOLIA_RPC_URL || 'https://sepolia.base.org';
+const RPC_URL = process.env.BASE_RPC_URL || 'https://mainnet.base.org';
 
 // -- Viem public client (cached) --
 let cachedClient: ReturnType<typeof createPublicClient> | null = null;
@@ -18,32 +16,46 @@ let cachedClient: ReturnType<typeof createPublicClient> | null = null;
 function getPublicClient() {
   if (cachedClient) return cachedClient;
   cachedClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(RPC_URL),
   });
   return cachedClient;
 }
 
-// -- Reputation ABI (read-only) --
-const REPUTATION_ABI = [
+// -- EtereCitizen ABI (read-only) --
+const ETERECITIZEN_ABI = [
+  // Identity
+  {
+    type: 'function',
+    name: 'getAgent',
+    inputs: [{ name: 'agent', type: 'address' }],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        components: [
+          { name: 'name', type: 'string' },
+          { name: 'capabilities', type: 'string[]' },
+          { name: 'createdAt', type: 'uint256' },
+          { name: 'active', type: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'isRegistered',
+    inputs: [{ name: 'agent', type: 'address' }],
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  // Reputation
   {
     type: 'function',
     name: 'getReviewCount',
     inputs: [{ name: 'agent', type: 'address' }],
     outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getAggregateScore',
-    inputs: [
-      { name: 'agent', type: 'address' },
-      { name: 'category', type: 'string' },
-    ],
-    outputs: [
-      { name: 'totalScore', type: 'uint256' },
-      { name: 'count', type: 'uint256' },
-    ],
     stateMutability: 'view',
   },
   {
@@ -78,20 +90,11 @@ const REPUTATION_ABI = [
     ],
     stateMutability: 'view',
   },
-  {
-    type: 'function',
-    name: 'getTotalTasksCompleted',
-    inputs: [{ name: 'agent', type: 'address' }],
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
-  },
 ] as const;
 
 // -- Helpers --
 
-/** Extract Ethereum address from a did:ethr DID */
 function didToAddress(did: string): `0x${string}` | null {
-  // did:ethr:0x14a34:0xABC... or did:ethr:0xABC...
   const parts = did.split(':');
   if (parts.length < 3 || parts[1] !== 'ethr') return null;
   const addr = parts[parts.length - 1];
@@ -99,12 +102,10 @@ function didToAddress(did: string): `0x${string}` | null {
   return null;
 }
 
-/** Validate a did:ethr string */
 function isValidDID(did: string): boolean {
   return /^did:ethr:(0x[0-9a-fA-F]+:)?0x[0-9a-fA-F]{40}$/.test(did);
 }
 
-/** Build a default DID document from the address (no ERC-1056 lookup needed) */
 function buildDefaultDIDDocument(did: string, address: `0x${string}`) {
   return {
     '@context': [
@@ -117,7 +118,7 @@ function buildDefaultDIDDocument(did: string, address: `0x${string}`) {
         id: `${did}#controller`,
         type: 'EcdsaSecp256k1RecoveryMethod2020',
         controller: did,
-        blockchainAccountId: `eip155:84532:${address}`,
+        blockchainAccountId: `eip155:8453:${address}`,
       },
     ],
     authentication: [`${did}#controller`],
@@ -129,7 +130,9 @@ function buildDefaultDIDDocument(did: string, address: `0x${string}`) {
 
 export interface IdentityCardResult {
   did: string;
+  name: string;
   verified: boolean;
+  registered: boolean;
   verificationLevel: number;
   reputationScore: number;
   reviewCount: number;
@@ -139,6 +142,7 @@ export interface IdentityCardResult {
   status: string;
   capabilities: string[];
   flags: string[];
+  createdAt: string;
   checkedAt: string;
 }
 
@@ -150,19 +154,18 @@ export async function resolveDID(did: string) {
   if (!address) {
     return { didDocument: null, error: 'Could not extract address from DID' };
   }
-  // Build a default DID document from the address.
-  // When ERC-1056 is deployed on Base Sepolia, this will use the registry.
   return { didDocument: buildDefaultDIDDocument(did, address) };
 }
 
 export async function verifyAgent(did: string): Promise<IdentityCardResult> {
   const flags: string[] = [];
 
-  // 1. Validate DID and extract address
   if (!isValidDID(did)) {
     return {
       did,
+      name: '',
       verified: false,
+      registered: false,
       verificationLevel: 0,
       reputationScore: 0,
       reviewCount: 0,
@@ -172,16 +175,18 @@ export async function verifyAgent(did: string): Promise<IdentityCardResult> {
       status: 'invalid',
       capabilities: [],
       flags: ['INVALID_DID_FORMAT'],
+      createdAt: '',
       checkedAt: new Date().toISOString(),
     };
   }
 
   const address = didToAddress(did);
   if (!address) {
-    flags.push('DID_NOT_FOUND');
     return {
       did,
+      name: '',
       verified: false,
+      registered: false,
       verificationLevel: 0,
       reputationScore: 0,
       reviewCount: 0,
@@ -190,21 +195,62 @@ export async function verifyAgent(did: string): Promise<IdentityCardResult> {
       agentAge: 0,
       status: 'unknown',
       capabilities: [],
-      flags,
+      flags: ['DID_NOT_FOUND'],
+      createdAt: '',
       checkedAt: new Date().toISOString(),
     };
   }
 
-  // 2. Read on-chain data from CitizenReputation contract
   const client = getPublicClient();
+
+  // --- Read identity from contract ---
+  let name = '';
+  let capabilities: string[] = [];
+  let createdAt = '';
+  let registered = false;
+  let active = false;
+  let agentAge = 0;
+
+  try {
+    registered = await client.readContract({
+      address: CONTRACT_ADDRESS,
+      abi: ETERECITIZEN_ABI,
+      functionName: 'isRegistered',
+      args: [address],
+    }) as boolean;
+
+    if (registered) {
+      const agent = await client.readContract({
+        address: CONTRACT_ADDRESS,
+        abi: ETERECITIZEN_ABI,
+        functionName: 'getAgent',
+        args: [address],
+      }) as { name: string; capabilities: readonly string[]; createdAt: bigint; active: boolean };
+
+      name = agent.name;
+      capabilities = [...agent.capabilities];
+      active = agent.active;
+      if (agent.createdAt > 0n) {
+        const createdTimestamp = Number(agent.createdAt) * 1000;
+        createdAt = new Date(createdTimestamp).toISOString();
+        agentAge = Math.floor((Date.now() - createdTimestamp) / (1000 * 60 * 60 * 24));
+      }
+    }
+  } catch {
+    flags.push('IDENTITY_READ_ERROR');
+  }
+
+  if (!registered) flags.push('NOT_REGISTERED');
+
+  // --- Read reputation from contract ---
   let verificationLevel = 0;
   let reviewCount = 0;
   const categoryRatings: { category: string; score: number; reviews: number }[] = [];
 
   try {
     const level = await client.readContract({
-      address: REPUTATION_CONTRACT,
-      abi: REPUTATION_ABI,
+      address: CONTRACT_ADDRESS,
+      abi: ETERECITIZEN_ABI,
       functionName: 'getVerificationLevel',
       args: [address],
     });
@@ -215,8 +261,8 @@ export async function verifyAgent(did: string): Promise<IdentityCardResult> {
 
   try {
     const count = await client.readContract({
-      address: REPUTATION_CONTRACT,
-      abi: REPUTATION_ABI,
+      address: CONTRACT_ADDRESS,
+      abi: ETERECITIZEN_ABI,
       functionName: 'getReviewCount',
       args: [address],
     });
@@ -225,12 +271,11 @@ export async function verifyAgent(did: string): Promise<IdentityCardResult> {
     flags.push('REPUTATION_UNAVAILABLE');
   }
 
-  // Get reviews to extract categories
   if (reviewCount > 0) {
     try {
       const reviews = await client.readContract({
-        address: REPUTATION_CONTRACT,
-        abi: REPUTATION_ABI,
+        address: CONTRACT_ADDRESS,
+        abi: ETERECITIZEN_ABI,
         functionName: 'getReviews',
         args: [address, 0n, BigInt(Math.min(reviewCount, 50))],
       });
@@ -255,8 +300,8 @@ export async function verifyAgent(did: string): Promise<IdentityCardResult> {
     }
   }
 
-  // 3. Flags
   if (reviewCount === 0) flags.push('NO_REVIEWS');
+  if (agentAge < 7 && registered) flags.push('NEW_AGENT');
 
   const reputationScore =
     categoryRatings.length > 0
@@ -266,16 +311,19 @@ export async function verifyAgent(did: string): Promise<IdentityCardResult> {
 
   return {
     did,
-    verified: true, // DID is valid and maps to a real address
+    name,
+    verified: registered && active,
+    registered,
     verificationLevel,
     reputationScore,
     reviewCount,
     categoryRatings,
-    walletConnected: false, // Will be populated when ERC-1056 DID documents are available
-    agentAge: 0, // Will be populated when ERC-1056 DID documents are available
-    status: 'active',
-    capabilities: [], // Will be populated from DID document services
+    walletConnected: false,
+    agentAge,
+    status: !registered ? 'unregistered' : active ? 'active' : 'deactivated',
+    capabilities,
     flags,
+    createdAt,
     checkedAt: new Date().toISOString(),
   };
 }

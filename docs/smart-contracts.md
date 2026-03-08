@@ -4,13 +4,12 @@
 
 | Contract | Network | Address |
 |---|---|---|
-| CitizenReputation v2 | Base Sepolia | `0x6d51FeBF4E8e87388BDCc90E85ce0c2fF6D19843` |
-| EthereumDIDRegistry (ERC-1056) | Base Sepolia | `0xd1D374DDE031075157fDb64536eF5cC13Ae75000` |
-| EthereumDIDRegistry (ERC-1056) | Base Mainnet | `0xd1D374DDE031075157fDb64536eF5cC13Ae75000` |
+| EtereCitizen | Base Mainnet | `0x2BecDFe8406eA2895F16a9B8448b40166F4178f6` |
+| EtereCitizen | Base Sepolia | `0xDC6c6f3d10dE4b7B84Cc3d4D3807325Cd2B53d59` |
 
-## CitizenReputation.sol
+## EtereCitizen.sol
 
-On-chain reputation system for EtereCitizen AI agents. Stores review hashes + scores on-chain; full review VCs live on IPFS. Temporal decay and anti-fraud detection happen off-chain in the SDK.
+Unified identity + reputation contract for EtereCitizen AI agents. Stores review hashes + scores on-chain; full review VCs live on IPFS. Temporal decay and anti-fraud detection happen off-chain in the SDK.
 
 ### Architecture
 
