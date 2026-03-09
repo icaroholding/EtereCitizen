@@ -13,7 +13,8 @@ import type {
   PaymentRequest,
   PaymentResponse,
 } from '@eterecitizen/common';
-import { VerificationLevel, DEFAULT_NETWORK } from '@eterecitizen/common';
+import { VerificationLevel, DEFAULT_NETWORK, NETWORKS } from '@eterecitizen/common';
+import type { NetworkName } from '@eterecitizen/common';
 import { DIDManager } from './identity/did-manager.js';
 import { VCManager } from './credentials/vc-manager.js';
 import { BirthCertificateManager } from './credentials/birth-certificate.js';
@@ -32,6 +33,7 @@ export class Agent {
   private _wallet: WalletAdapter | null = null;
   private _walletInfo: WalletInfo | null = null;
   private _credentials: VerifiableCredential[] = [];
+  private _network: NetworkName;
 
   // Managers (injected)
   private didManager: DIDManager;
@@ -50,10 +52,12 @@ export class Agent {
     vcManager: VCManager;
     registryManager: RegistryManager;
     store: SQLiteStore;
+    network?: NetworkName;
     credentials?: VerifiableCredential[];
   }) {
     this.did = params.did;
     this._profile = params.profile;
+    this._network = params.network ?? DEFAULT_NETWORK;
     this.didManager = params.didManager;
     this.vcManager = params.vcManager;
     this.birthCertManager = new BirthCertificateManager(params.vcManager);
@@ -78,7 +82,8 @@ export class Agent {
     const address = await adapter.getAddress();
 
     // Challenge-response to prove ownership
-    const challenge = generateChallenge(address, 84532);
+    const chainId = NETWORKS[this._network].chainId;
+    const challenge = generateChallenge(address, chainId);
     const message = challengeToMessage(challenge);
     const signature = await adapter.signMessage(message);
 

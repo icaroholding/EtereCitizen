@@ -7,7 +7,7 @@ import type {
   SearchResult,
   NetworkName,
 } from '@eterecitizen/common';
-import { DEFAULT_NETWORK } from '@eterecitizen/common';
+import { DEFAULT_NETWORK, NETWORKS, addressToDID } from '@eterecitizen/common';
 import { Agent } from './agent.js';
 import { initVeramoAgent } from './identity/veramo-init.js';
 import { DIDManager } from './identity/did-manager.js';
@@ -83,13 +83,40 @@ export class EtereCitizen {
     const vcManager = new VCManager(veramoAgent);
 
     // Check if this agent already has a DID in Veramo (subsequent runs)
-    // If not, create a new one via Veramo's DID manager (registers keys for VC signing)
     let did: string;
     const existingDIDs = await didManager.getDIDsManaged();
     if (existingDIDs.length > 0) {
       did = existingDIDs[0]; // Reuse existing DID
     } else {
-      did = await didManager.createDID({ network });
+      // Generate key with viem (address-format DID for protocol compatibility)
+      const { privateKeyToAccount, generatePrivateKey } = await import('viem/accounts');
+      const privateKey = generatePrivateKey();
+      const account = privateKeyToAccount(privateKey);
+
+      // Import key into Veramo's KeyManager (enables VC signing)
+      const privateKeyHex = privateKey.slice(2); // remove 0x prefix
+      const key = await veramoAgent.keyManagerImport({
+        kms: 'local',
+        type: 'Secp256k1',
+        privateKeyHex,
+      });
+
+      // Create address-format DID and register in Veramo's DID store
+      did = addressToDID(account.address, network);
+      const chainIdHex = `0x${NETWORKS[network].chainId.toString(16)}`;
+
+      await veramoAgent.didManagerImport({
+        did,
+        provider: `did:ethr:${chainIdHex}`,
+        controllerKeyId: key.kid,
+        keys: [{
+          kid: key.kid,
+          kms: 'local',
+          type: 'Secp256k1' as const,
+          publicKeyHex: key.publicKeyHex,
+          privateKeyHex,
+        }],
+      });
     }
 
     const profile = {
@@ -126,6 +153,7 @@ export class EtereCitizen {
       vcManager,
       registryManager: instance.registryManager,
       store: instance.store,
+      network,
     });
 
     // Issue Birth Certificate VC
