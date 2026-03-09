@@ -82,15 +82,15 @@ export class EtereCitizen {
     const didManager = new DIDManager(veramoAgent, ipfs, network);
     const vcManager = new VCManager(veramoAgent);
 
-    // For initial development, generate a DID from a random key
-    // In production: const did = await didManager.createDID({ network });
-    const { privateKeyToAccount } = await import('viem/accounts');
-    const { generatePrivateKey } = await import('viem/accounts');
-    const privateKey = generatePrivateKey();
-    const account = privateKeyToAccount(privateKey);
-
-    const { addressToDID } = await import('@eterecitizen/common');
-    const did = addressToDID(account.address, network);
+    // Check if this agent already has a DID in Veramo (subsequent runs)
+    // If not, create a new one via Veramo's DID manager (registers keys for VC signing)
+    let did: string;
+    const existingDIDs = await didManager.getDIDsManaged();
+    if (existingDIDs.length > 0) {
+      did = existingDIDs[0]; // Reuse existing DID
+    } else {
+      did = await didManager.createDID({ network });
+    }
 
     const profile = {
       did,
