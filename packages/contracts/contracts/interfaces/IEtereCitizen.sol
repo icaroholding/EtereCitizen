@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Icaro Holding — Michele Trani
+// https://eterecitizen.io
 pragma solidity ^0.8.24;
 
 /// @title IEtereCitizen
