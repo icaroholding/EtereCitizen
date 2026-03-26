@@ -20,6 +20,9 @@ import { RegistryManager } from './registry/registry-manager.js';
 import { SQLiteStore } from './storage/sqlite-store.js';
 import { createBaseProvider } from './blockchain/base-provider.js';
 import { createContractClients } from './blockchain/contract-clients.js';
+import { createChildLogger } from './logger.js';
+
+const log = createChildLogger('eterecitizen');
 
 export interface EtereCitizenConfig {
   network?: NetworkName;
@@ -199,8 +202,9 @@ export class EtereCitizen {
       undefined,
       config?.reputationContractAddress,
     );
+    const vcManager = new VCManager(veramoAgent);
     const reputationManager = new ReputationManager(contracts);
-    const verifier = new Verifier(didManager, reputationManager, contracts);
+    const verifier = new Verifier(didManager, reputationManager, contracts, vcManager);
 
     return verifier.verify(did);
   }

@@ -104,6 +104,16 @@ describe('EtereCitizen', function () {
       ).to.be.revertedWith('Agent not registered');
     });
 
+    it('should enforce capability limit', async function () {
+      // Register with max capabilities
+      const caps = Array.from({ length: 50 }, (_, i) => `cap-${i}`);
+      await contract.connect(agent2).registerAgent('FullAgent', caps);
+
+      await expect(
+        contract.connect(agent2).addCapability('one-more'),
+      ).to.be.revertedWith('Too many capabilities');
+    });
+
     it('should deactivate an agent', async function () {
       await expect(contract.connect(agent1).deactivateAgent())
         .to.emit(contract, 'AgentDeactivated')
@@ -167,21 +177,55 @@ describe('EtereCitizen', function () {
         { value: REVIEW_FEE },
       );
 
+      const txHash2 = ethers.keccak256(ethers.toUtf8Bytes('tx-hash-cooldown'));
       await expect(
         contract.connect(agent1).submitReview(
-          agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 4,
+          agent2.address, REVIEW_HASH, txHash2, CATEGORY, 4,
           { value: REVIEW_FEE },
         ),
       ).to.be.revertedWith('Review cooldown active');
     });
 
-    it('should aggregate scores correctly', async function () {
+    it('should reject duplicate txHash', async function () {
       await contract.connect(agent1).submitReview(
         agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
         { value: REVIEW_FEE },
       );
 
-      const txHash2 = ethers.keccak256(ethers.toUtf8Bytes('tx-hash-2'));
+      // Different reviewer, same txHash → should be rejected
+      await expect(
+        contract.connect(owner).submitReview(
+          agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 4,
+          { value: REVIEW_FEE },
+        ),
+      ).to.be.revertedWith('Transaction already reviewed');
+    });
+
+    it('should refund excess ETH', async function () {
+      const excessFee = ethers.parseEther('0.001'); // 10x the fee
+      const balanceBefore = await ethers.provider.getBalance(agent1.address);
+
+      const tx = await contract.connect(agent1).submitReview(
+        agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
+        { value: excessFee },
+      );
+      const receipt = await tx.wait();
+      const gasUsed = receipt!.gasUsed * receipt!.gasPrice;
+
+      const balanceAfter = await ethers.provider.getBalance(agent1.address);
+      // Agent should only have paid REVIEW_FEE + gas, not the full excessFee
+      const actualPaid = balanceBefore - balanceAfter - gasUsed;
+      expect(actualPaid).to.equal(REVIEW_FEE);
+    });
+
+    it('should aggregate scores correctly', async function () {
+      const txHash1 = ethers.keccak256(ethers.toUtf8Bytes('tx-hash-agg-1'));
+      await contract.connect(agent1).submitReview(
+        agent2.address, REVIEW_HASH, txHash1, CATEGORY, 5,
+        { value: REVIEW_FEE },
+      );
+
+      const txHash2 = ethers.keccak256(ethers.toUtf8Bytes('tx-hash-agg-2'));
       await contract.connect(owner).submitReview(
         agent2.address, REVIEW_HASH, txHash2, CATEGORY, 3,
         { value: REVIEW_FEE },
@@ -195,8 +239,9 @@ describe('EtereCitizen', function () {
 
   describe('Review Retrieval', function () {
     it('should return reviews with pagination', async function () {
+      const retTxHash = ethers.keccak256(ethers.toUtf8Bytes('tx-retrieval'));
       await contract.connect(agent1).submitReview(
-        agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
+        agent2.address, REVIEW_HASH, retTxHash, CATEGORY, 5,
         { value: REVIEW_FEE },
       );
 
@@ -214,8 +259,9 @@ describe('EtereCitizen', function () {
 
   describe('Fees', function () {
     it('should collect fees', async function () {
+      const feeTxHash = ethers.keccak256(ethers.toUtf8Bytes('tx-fee-collect'));
       await contract.connect(agent1).submitReview(
-        agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
+        agent2.address, REVIEW_HASH, feeTxHash, CATEGORY, 5,
         { value: REVIEW_FEE },
       );
 
@@ -224,8 +270,9 @@ describe('EtereCitizen', function () {
     });
 
     it('should allow owner to withdraw fees', async function () {
+      const feeTxHash = ethers.keccak256(ethers.toUtf8Bytes('tx-fee-withdraw'));
       await contract.connect(agent1).submitReview(
-        agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
+        agent2.address, REVIEW_HASH, feeTxHash, CATEGORY, 5,
         { value: REVIEW_FEE },
       );
 
@@ -235,14 +282,27 @@ describe('EtereCitizen', function () {
     });
 
     it('should reject withdrawal from non-owner', async function () {
+      const feeTxHash = ethers.keccak256(ethers.toUtf8Bytes('tx-fee-reject'));
       await contract.connect(agent1).submitReview(
-        agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
+        agent2.address, REVIEW_HASH, feeTxHash, CATEGORY, 5,
         { value: REVIEW_FEE },
       );
 
       await expect(
         contract.connect(agent1).withdrawFees(agent1.address),
       ).to.be.reverted;
+    });
+
+    it('should reject withdrawal to zero address', async function () {
+      const feeTxHash = ethers.keccak256(ethers.toUtf8Bytes('tx-fee-zero'));
+      await contract.connect(agent1).submitReview(
+        agent2.address, REVIEW_HASH, feeTxHash, CATEGORY, 5,
+        { value: REVIEW_FEE },
+      );
+
+      await expect(
+        contract.withdrawFees(ethers.ZeroAddress),
+      ).to.be.revertedWith('Invalid recipient');
     });
   });
 
@@ -282,8 +342,9 @@ describe('EtereCitizen', function () {
       await contract.connect(agent2).registerAgent('Atlas', ['research', 'analysis']);
 
       // 2. Submit review
+      const integrationTxHash = ethers.keccak256(ethers.toUtf8Bytes('tx-integration'));
       await contract.connect(agent1).submitReview(
-        agent2.address, REVIEW_HASH, TX_HASH, CATEGORY, 5,
+        agent2.address, REVIEW_HASH, integrationTxHash, CATEGORY, 5,
         { value: REVIEW_FEE },
       );
 

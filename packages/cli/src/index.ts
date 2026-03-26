@@ -11,6 +11,7 @@ import { reviewCommand } from './commands/review.js';
 import { statusCommand } from './commands/status.js';
 import { exportCommand } from './commands/export.js';
 import { importCommand } from './commands/import.js';
+import { whoamiCommand } from './commands/whoami.js';
 
 const program = new Command();
 
@@ -30,5 +31,6 @@ program.addCommand(reviewCommand);
 program.addCommand(statusCommand);
 program.addCommand(exportCommand);
 program.addCommand(importCommand);
+program.addCommand(whoamiCommand);
 
 program.parse();

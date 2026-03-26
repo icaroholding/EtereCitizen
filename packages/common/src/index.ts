@@ -157,3 +157,15 @@ export {
   searchFiltersSchema,
   paymentRequestSchema,
 } from './utils/validation.js';
+
+// Errors
+export {
+  EtereCitizenError,
+  IdentityError,
+  CredentialError,
+  ContractError,
+  StorageError,
+  NetworkError,
+  ValidationError,
+  TimeoutError,
+} from './errors.js';

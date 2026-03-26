@@ -24,6 +24,7 @@ vcRoutes.post('/vc/verify', async (c) => {
       subject: body.credentialSubject?.id,
     });
   } catch (error) {
-    return c.json({ error: 'Verification failed' }, 500);
+    console.error('[vc] Failed to verify credential:', error);
+    return c.json({ error: 'Failed to verify credential' }, 500);
   }
 });

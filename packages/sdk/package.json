@@ -32,6 +32,7 @@
     "better-sqlite3": "^11.0.0",
     "did-resolver": "^4.1.0",
     "ethr-did-resolver": "^10.1.0",
+    "pino": "^10.3.1",
     "typeorm": "^0.3.28",
     "viem": "^2.15.0",
     "zod": "^3.22.0"

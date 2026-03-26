@@ -33,6 +33,12 @@ contract EtereCitizen is IEtereCitizen, Ownable {
     mapping(address => mapping(address => uint256)) private _lastReviewTime;
     uint256 public constant REVIEW_COOLDOWN = 1 days;
 
+    // Anti-duplicate: txHash => already used
+    mapping(bytes32 => bool) private _usedTxHashes;
+
+    // Capability limit per agent
+    uint256 public constant MAX_CAPABILITIES = 50;
+
     // ===================== Fees =====================
 
     uint256 public reviewFee = 0.0001 ether;
@@ -76,11 +82,14 @@ contract EtereCitizen is IEtereCitizen, Ownable {
     }
 
     function withdrawFees(address payable to) external onlyOwner {
+        require(to != address(0), "Invalid recipient");
         uint256 balance = address(this).balance;
         require(balance > 0, "No fees to withdraw");
+        // Checks-Effects-Interactions: update state before external call
         totalFeesCollected += balance;
-        to.transfer(balance);
         emit FeesWithdrawn(to, balance);
+        (bool success, ) = to.call{value: balance}("");
+        require(success, "Transfer failed");
     }
 
     // ===================== Identity =====================
@@ -117,6 +126,7 @@ contract EtereCitizen is IEtereCitizen, Ownable {
     /// @notice Add a capability to the agent
     function addCapability(string calldata capability) external onlyRegistered {
         require(bytes(capability).length > 0, "Capability required");
+        require(_agents[msg.sender].capabilities.length < MAX_CAPABILITIES, "Too many capabilities");
         _agents[msg.sender].capabilities.push(capability);
         emit CapabilityAdded(msg.sender, capability);
     }
@@ -153,12 +163,16 @@ contract EtereCitizen is IEtereCitizen, Ownable {
         require(bytes(category).length > 0, "Category required");
         require(reviewHash != bytes32(0), "Review hash required");
         require(txHash != bytes32(0), "Transaction hash required");
+        require(!_usedTxHashes[txHash], "Transaction already reviewed");
 
         // Cooldown check
         require(
             block.timestamp >= _lastReviewTime[msg.sender][reviewed] + REVIEW_COOLDOWN,
             "Review cooldown active"
         );
+
+        // Mark txHash as used
+        _usedTxHashes[txHash] = true;
 
         ReviewRecord memory record = ReviewRecord({
             reviewHash: reviewHash,
@@ -177,6 +191,13 @@ contract EtereCitizen is IEtereCitizen, Ownable {
         _lastReviewTime[msg.sender][reviewed] = block.timestamp;
 
         emit ReviewSubmitted(msg.sender, reviewed, reviewHash, category, rating, block.timestamp);
+
+        // Refund excess ETH
+        uint256 excess = msg.value - reviewFee;
+        if (excess > 0) {
+            (bool success, ) = payable(msg.sender).call{value: excess}("");
+            require(success, "Refund failed");
+        }
     }
 
     function getAggregateScore(

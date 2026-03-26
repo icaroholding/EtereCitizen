@@ -89,4 +89,8 @@ interface IEtereCitizen {
     function setVerificationLevel(address agent, uint8 level) external;
     function getVerificationLevel(address agent) external view returns (uint8);
     function getTotalTasksCompleted(address agent) external view returns (uint256);
+
+    // --- Constants ---
+    function MAX_CAPABILITIES() external view returns (uint256);
+    function REVIEW_COOLDOWN() external view returns (uint256);
 }

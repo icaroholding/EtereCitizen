@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { corsMiddleware } from './middleware/cors.js';
 import { rateLimitMiddleware } from './middleware/rate-limit.js';
+import { requireApiKey } from './middleware/auth.js';
 import { healthRoutes } from './routes/health.js';
 import { didRoutes } from './routes/did.js';
 import { verifyRoutes } from './routes/verify.js';
@@ -8,6 +9,7 @@ import { identityCardRoutes } from './routes/identity-card.js';
 import { searchRoutes } from './routes/search.js';
 import { reputationRoutes } from './routes/reputation.js';
 import { vcRoutes } from './routes/vc.js';
+import { badgeRoutes } from './routes/badge.js';
 
 export function createApp() {
   const app = new Hono();
@@ -15,6 +17,14 @@ export function createApp() {
   // Middleware
   app.use('*', corsMiddleware);
   app.use('/api/*', rateLimitMiddleware);
+
+  // Auth middleware for POST routes only
+  app.use('/api/*', async (c, next) => {
+    if (c.req.method === 'POST') {
+      return requireApiKey()(c, next);
+    }
+    await next();
+  });
 
   // Routes
   const api = new Hono();
@@ -25,6 +35,7 @@ export function createApp() {
   api.route('/', searchRoutes);
   api.route('/', reputationRoutes);
   api.route('/', vcRoutes);
+  api.route('/', badgeRoutes);
 
   app.route('/api', api);
 

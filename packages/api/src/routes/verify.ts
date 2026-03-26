@@ -10,7 +10,7 @@ verifyRoutes.get('/verify/:did', async (c) => {
     const result = await verifyAgent(did);
     return c.json(result);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.json({ error: 'Verification failed', details: message }, 500);
+    console.error('[verify] Failed to verify agent:', did, error);
+    return c.json({ error: 'Failed to verify agent' }, 500);
   }
 });

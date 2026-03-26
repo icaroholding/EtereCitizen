@@ -1,5 +1,7 @@
 import { TrustBadge } from './TrustBadge';
 import { RatingDisplay } from './RatingDisplay';
+import { VerificationProgress } from './VerificationProgress';
+import { QRCode } from './QRCode';
 import type { IdentityCardResponse } from '@/lib/api-client';
 
 export function IdentityCard({ data }: { data: IdentityCardResponse }) {
@@ -10,9 +12,12 @@ export function IdentityCard({ data }: { data: IdentityCardResponse }) {
       </div>
 
       <div className="px-6 py-5 space-y-4">
-        <div>
-          <p className="text-xs text-gray-500 uppercase tracking-wide">DID</p>
-          <p className="text-sm font-mono break-all mt-1">{data.did}</p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-gray-500 uppercase tracking-wide">DID</p>
+            <p className="text-sm font-mono break-all mt-1">{data.did}</p>
+          </div>
+          <QRCode did={data.did} size={72} />
         </div>
 
         <div className="flex items-center gap-3">
@@ -21,6 +26,8 @@ export function IdentityCard({ data }: { data: IdentityCardResponse }) {
             {data.verified ? 'Verified' : 'Not Verified'}
           </span>
         </div>
+
+        <VerificationProgress level={data.verificationLevel} />
 
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wide">Overall Score</p>

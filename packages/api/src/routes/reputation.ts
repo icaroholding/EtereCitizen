@@ -15,8 +15,8 @@ reputationRoutes.get('/reputation/:did', async (c) => {
       reviewCount: result.reviewCount,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.json({ error: 'Failed to fetch reputation', details: message }, 500);
+    console.error('[reputation] Failed to fetch reputation:', did, error);
+    return c.json({ error: 'Failed to fetch reputation' }, 500);
   }
 });
 
@@ -34,7 +34,7 @@ reputationRoutes.get('/reputation/:did/:category', async (c) => {
 
     return c.json(categoryRating);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.json({ error: 'Failed to fetch reputation', details: message }, 500);
+    console.error('[reputation] Failed to fetch reputation:', did, category, error);
+    return c.json({ error: 'Failed to fetch reputation' }, 500);
   }
 });

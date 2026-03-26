@@ -10,7 +10,7 @@ identityCardRoutes.get('/card/:did', async (c) => {
     const result = await verifyAgent(did);
     return c.json(result);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.json({ error: 'Failed to fetch identity card', details: message }, 500);
+    console.error('[card] Failed to fetch identity card:', did, error);
+    return c.json({ error: 'Failed to fetch identity card' }, 500);
   }
 });

@@ -1,5 +1,6 @@
 export { EtereCitizen, type EtereCitizenConfig } from './eterecitizen.js';
 export { Agent } from './agent.js';
+export { logger, createChildLogger, type Logger } from './logger.js';
 
 // Identity
 export { DIDManager } from './identity/did-manager.js';
@@ -32,7 +33,7 @@ export { calculateDecayWeight, calculateDecayedScore } from './reputation/tempor
 export { detectAntifraudFlags } from './reputation/antifraud.js';
 
 // Trust
-export { Verifier } from './trust/verifier.js';
+export { Verifier, type VerifyOptions } from './trust/verifier.js';
 export { calculateTrustScore } from './trust/trust-score.js';
 
 // Registry

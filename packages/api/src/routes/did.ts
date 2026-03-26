@@ -13,7 +13,7 @@ didRoutes.get('/did/:did', async (c) => {
     }
     return c.json(result.didDocument);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.json({ error: 'Resolution failed', details: message }, 500);
+    console.error('[did] Failed to resolve DID:', did, error);
+    return c.json({ error: 'Failed to resolve DID' }, 500);
   }
 });

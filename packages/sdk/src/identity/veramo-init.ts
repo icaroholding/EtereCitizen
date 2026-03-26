@@ -8,7 +8,7 @@ import {
 } from '@veramo/data-store';
 import { randomBytes } from 'crypto';
 import { join } from 'path';
-import { mkdirSync } from 'fs';
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 import { createVeramoAgent, type VeramoAgent } from './veramo-config.js';
 import type { NetworkName } from '@eterecitizen/common';
 
@@ -43,9 +43,23 @@ export async function initVeramoAgent(options: VeramoInitOptions = {}): Promise<
 
   await dataSource.initialize();
 
-  // 32 bytes hex = 64 chars for SecretBox
-  const secretKey =
-    options.secretKey || process.env.VERAMO_SECRET_KEY || randomBytes(32).toString('hex');
+  // 32 bytes hex = 64 chars for SecretBox.
+  // The secret key MUST be the same across restarts, otherwise Veramo's KMS
+  // can't decrypt the DID's private key and signing fails with "got 0 bytes".
+  // Priority: explicit config > env var > persisted file > generate new (first run only).
+  const secretKeyFile = join(dbPath, '..', '.veramo-secret');
+  let secretKey = options.secretKey || process.env.VERAMO_SECRET_KEY || '';
+
+  if (!secretKey) {
+    // Try to load from persisted file
+    if (existsSync(secretKeyFile)) {
+      secretKey = readFileSync(secretKeyFile, 'utf-8').trim();
+    } else {
+      // First run: generate and persist
+      secretKey = randomBytes(32).toString('hex');
+      writeFileSync(secretKeyFile, secretKey, { mode: 0o600 }); // owner-read-write only
+    }
+  }
 
   const agent = createVeramoAgent({
     network: options.network,

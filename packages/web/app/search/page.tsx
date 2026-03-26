@@ -18,6 +18,8 @@ interface AgentResult {
 export default function SearchPage() {
   const [results, setResults] = useState<AgentResult[]>([]);
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async (params: {
     capability: string;
@@ -29,24 +31,43 @@ export default function SearchPage() {
     if (params.minRating) query.set('minRating', params.minRating);
     if (params.minLevel) query.set('minLevel', params.minLevel);
 
+    setLoading(true);
+    setError(null);
+
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
       const res = await fetch(`${apiBase}/search?${query}`);
+      if (!res.ok) throw new Error('Search failed');
       const data = await res.json();
       setResults(data.agents || []);
-    } catch {
+    } catch (err) {
       setResults([]);
+      setError(err instanceof Error ? err.message : 'Search failed');
+    } finally {
+      setLoading(false);
+      setSearched(true);
     }
-    setSearched(true);
   };
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <h1 className="text-2xl font-bold mb-8">Search Agents</h1>
 
-      <SearchForm onSearch={handleSearch} />
+      <SearchForm onSearch={handleSearch} loading={loading} />
 
-      {searched && (
+      {error && (
+        <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="mt-8 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-citizen-600" />
+        </div>
+      )}
+
+      {searched && !loading && (
         <div className="mt-8">
           {results.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No agents found.</p>
@@ -63,7 +84,7 @@ export default function SearchPage() {
                       <h3 className="font-semibold">{agent.name}</h3>
                       <p className="text-xs text-gray-500 font-mono mt-1">{agent.did}</p>
                       {agent.capabilities.length > 0 && (
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex gap-2 mt-2 flex-wrap">
                           {agent.capabilities.map((cap) => (
                             <span key={cap} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
                               {cap}
@@ -72,7 +93,7 @@ export default function SearchPage() {
                         </div>
                       )}
                     </div>
-                    <div className="text-right">
+                    <div className="text-right flex-shrink-0 ml-4">
                       <TrustBadge level={agent.verificationLevel} />
                       <div className="mt-2">
                         <RatingDisplay score={agent.overallScore} count={agent.totalReviews} />
