@@ -60,10 +60,51 @@ export type IdentityCardResult = TrustResult;
 
 export async function resolveDID(did: string) {
   try {
-    const didDocument = await EtereCitizen.resolve(did, sdkConfig);
-    if (!didDocument) {
-      return { didDocument: null, error: 'DID not found' };
+    const address = didToAddress(did);
+    if (!address) {
+      return { didDocument: null, error: 'Invalid DID format' };
     }
+
+    // Lightweight DID resolution: build a W3C-compliant DID Document
+    // from the address without needing full Veramo + SQLite
+    const chainIdHex = did.split(':')[2] || '0x14a34';
+    const chainId = parseInt(chainIdHex, 16);
+
+    const didDocument = {
+      '@context': [
+        'https://www.w3.org/ns/did/v1',
+        'https://w3id.org/security/suites/secp256k1recovery-2020/v2',
+      ],
+      id: did,
+      verificationMethod: [
+        {
+          id: `${did}#controller`,
+          type: 'EcdsaSecp256k1RecoveryMethod2020',
+          controller: did,
+          blockchainAccountId: `eip155:${chainId}:${address}`,
+        },
+      ],
+      authentication: [`${did}#controller`],
+      assertionMethod: [`${did}#controller`],
+    };
+
+    // Try to enrich with on-chain identity data
+    try {
+      const identity = await getOnChainIdentity(did);
+      if (identity && identity.registered) {
+        const services: Array<{ id: string; type: string; serviceEndpoint: string }> = [
+          {
+            id: `${did}#agent`,
+            type: 'EtereCitizenAgent',
+            serviceEndpoint: `https://api.eterecitizen.io/api/card/${encodeURIComponent(did)}`,
+          },
+        ];
+        Object.assign(didDocument, { service: services });
+      }
+    } catch {
+      // Non-fatal: return basic DID doc without services
+    }
+
     return { didDocument };
   } catch {
     return { didDocument: null, error: 'Failed to resolve DID' };
