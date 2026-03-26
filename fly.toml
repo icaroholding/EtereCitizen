@@ -10,8 +10,8 @@ primary_region = 'fra'
   dockerfile = 'packages/api/Dockerfile'
 
 [env]
-  BASE_RPC_URL = 'https://mainnet.base.org'
-  ETERECITIZEN_CONTRACT_ADDRESS = '0x2BecDFe8406eA2895F16a9B8448b40166F4178f6'
+  BASE_RPC_URL = 'https://sepolia.base.org'
+  ETERECITIZEN_CONTRACT_ADDRESS = '0xf0fe3326cCab970F62F9639eCdeec028F050261d'
   CORS_ORIGINS = 'https://eterecitizen.io,https://www.eterecitizen.io'
   NODE_ENV = 'production'
   PORT = '3000'
