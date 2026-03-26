@@ -172,8 +172,10 @@ export class EtereCitizen {
       // VC issuance requires full Veramo setup — non-fatal in dev
     }
 
-    // Self-attest capabilities
+    // Self-attest capabilities (skip if already attested from a previous run)
+    const existingCaps = new Set(profile.capabilities.map(c => c.name));
     for (const capability of config.capabilities || []) {
+      if (existingCaps.has(capability)) continue; // already attested
       try {
         await agent.addCapability(capability);
       } catch {
