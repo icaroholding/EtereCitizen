@@ -199,7 +199,7 @@ Agent A                              Agent B
 | Contract | Network | Address | Status |
 |----------|---------|---------|--------|
 | **EtereCitizen** | Base Mainnet | [`0x2Bec...78f6`](https://basescan.org/address/0x2BecDFe8406eA2895F16a9B8448b40166F4178f6#code) | Verified |
-| **EtereCitizen** | Base Sepolia | [`0xDC6c...3d59`](https://sepolia.basescan.org/address/0xDC6c6f3d10dE4b7B84Cc3d4D3807325Cd2B53d59#code) | Verified |
+| **EtereCitizen v2** | Base Sepolia | [`0xf0fe...261d`](https://sepolia.basescan.org/address/0xf0fe3326cCab970F62F9639eCdeec028F050261d#code) | Verified |
 
 EtereCitizen.sol provides:
 - **Review storage** — Hash + score on-chain, full review VC on IPFS
