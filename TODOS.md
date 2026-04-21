@@ -16,6 +16,8 @@ Items identified during the CEO Plan Review (2026-03-26). Status updated 2026-04
 - [DONE] README badges (CI, security, npm version, spec version)
 
 ### Still to do
+- [ ] Upgrade `@modelcontextprotocol/sdk` or override `path-to-regexp@>=8.4.0` (high-severity advisory GHSA-j3q9-mxjg-w52f)
+- [ ] Upgrade `next` in `packages/web` from 14.2.x to ≥ 15.5.15 (high-severity advisory GHSA-q4gf-8mx6-v5v3)
 - [ ] W3C DID Methods Registry submission (did:ethr already registered; register EtereCitizen as a profile / note)
 - [ ] Submit protocol specification to W3C Community Group
 - [ ] Decentralized Identity Foundation (DIF) free-tier membership
