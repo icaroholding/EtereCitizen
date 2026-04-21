@@ -87,7 +87,7 @@ jobs:
 
       - name: Publish to npm
         working-directory: packages/${{ inputs.package }}
-        run: npm publish --provenance --access public --tag "${{ inputs.dist_tag }}"
+        run: npm publish --provenance --access public --tag "${{ inputs.dist_tag }}" --loglevel=verbose
 
       - name: Create git tag
         run: |
