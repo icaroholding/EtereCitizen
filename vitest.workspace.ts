@@ -7,4 +7,5 @@ export default defineWorkspace([
   'packages/cli',
   'packages/mcp-server',
   'packages/api',
+  'packages/conformance',
 ]);

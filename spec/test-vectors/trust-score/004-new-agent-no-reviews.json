@@ -1,0 +1,26 @@
+{
+  "description": "New agent (<7d) with no reviews: both NEW_AGENT (*0.9) and NO_REVIEWS (*0.85) penalties applied in order.",
+  "input": {
+    "verified":          true,
+    "reputationScore":   5.0,
+    "verificationLevel": 3,
+    "agentAge":          5,
+    "reviewCount":       0,
+    "walletConnected":   true,
+    "flags":             ["NEW_AGENT", "NO_REVIEWS"],
+    "antifraud":         null
+  },
+  "expected": {
+    "trustScore": 0.5753219178082192
+  },
+  "derivation": {
+    "R1_reputation":       0.4,
+    "R2_verification":     0.25,
+    "R3_agentAge":         0.0020547945205479453,
+    "R4_reviewCount":      0.0,
+    "R5_walletConnected":  0.1,
+    "sumBeforePenalties":  0.752054794520548,
+    "afterNewAgent":       0.676849315068493,
+    "afterNoReviews":      0.5753219178082192
+  }
+}

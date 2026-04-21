@@ -1,0 +1,16 @@
+{
+  "description": "Agent with no wallet connected loses the walletConnected 0.1 contribution.",
+  "input": {
+    "verified":          true,
+    "reputationScore":   3.0,
+    "verificationLevel": 0,
+    "agentAge":          30,
+    "reviewCount":       2,
+    "walletConnected":   false,
+    "flags":             [],
+    "antifraud":         null
+  },
+  "expected": {
+    "trustScore": 0.2761848298592708
+  }
+}

@@ -1,0 +1,46 @@
+name: Specification issue
+description: Ambiguity, contradiction, or missing normative detail in SPEC.md.
+labels: ["spec"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        File this when the specification is unclear, under-specified, or appears to contradict the reference implementation. Use "Bug report" instead if the bug is in the implementation — the spec being correct.
+
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: The SPEC.md section (number and title) that the issue concerns.
+      placeholder: "§10.3 Computation"
+    validations:
+      required: true
+
+  - type: input
+    id: clause
+    attributes:
+      label: Conformance clause
+      description: The exact C-NNN tag if one is involved.
+      placeholder: "C-500"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What's unclear, wrong, or missing? Quote the exact sentence(s).
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Does this block an independent implementation from interoperating? Is it cosmetic? Has it already caused divergent behavior?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed resolution
+      description: How you'd change the wording. Concrete suggestions help.

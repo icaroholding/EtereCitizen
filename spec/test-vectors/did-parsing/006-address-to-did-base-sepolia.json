@@ -1,0 +1,10 @@
+{
+  "description": "addressToDID MUST produce did:ethr:0x14a34:<addr> on base-sepolia (§5.5.1).",
+  "input": {
+    "address": "0x1234567890123456789012345678901234567890",
+    "network": "base-sepolia"
+  },
+  "expected": {
+    "addressToDID": "did:ethr:0x14a34:0x1234567890123456789012345678901234567890"
+  }
+}

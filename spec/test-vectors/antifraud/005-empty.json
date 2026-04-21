@@ -1,0 +1,12 @@
+{
+  "description": "Empty review set produces no flags.",
+  "input": {
+    "reviews": []
+  },
+  "expected": {
+    "isBurst":        false,
+    "isCluster":      false,
+    "isReciprocal":   false,
+    "suspicionScore": 0
+  }
+}

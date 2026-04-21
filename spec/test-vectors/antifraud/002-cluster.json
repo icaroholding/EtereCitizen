@@ -1,0 +1,16 @@
+{
+  "description": "3 reviews within 1 hour from different reviewers triggers the cluster flag. suspicionScore contribution = 0.2.",
+  "input": {
+    "reviews": [
+      { "reviewerDID": "did:ethr:0x14a34:0xAAAA000000000000000000000000000000000001", "reviewedDID": "did:ethr:0x14a34:0xBBBB000000000000000000000000000000000001", "timestamp": "2026-04-21T10:00:00.000Z", "rating": 5, "category": "general" },
+      { "reviewerDID": "did:ethr:0x14a34:0xAAAA000000000000000000000000000000000002", "reviewedDID": "did:ethr:0x14a34:0xBBBB000000000000000000000000000000000001", "timestamp": "2026-04-21T10:20:00.000Z", "rating": 5, "category": "general" },
+      { "reviewerDID": "did:ethr:0x14a34:0xAAAA000000000000000000000000000000000003", "reviewedDID": "did:ethr:0x14a34:0xBBBB000000000000000000000000000000000001", "timestamp": "2026-04-21T10:50:00.000Z", "rating": 5, "category": "general" }
+    ]
+  },
+  "expected": {
+    "isBurst":        false,
+    "isCluster":      true,
+    "isReciprocal":   false,
+    "suspicionScore": 0.2
+  }
+}

@@ -1,0 +1,58 @@
+name: Bug report
+description: Something the code does that it shouldn't, or doesn't do that it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report. Before submitting, please make sure the issue is reproducible on the latest published version of the affected package.
+
+  - type: input
+    id: package
+    attributes:
+      label: Package
+      description: Which `@eterecitizen/*` package is affected? Or "contracts" for the Solidity side.
+      placeholder: "@eterecitizen/sdk"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Exact version you hit the bug on (`npm ls @eterecitizen/...`).
+      placeholder: "0.1.2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: The shortest snippet that demonstrates the bug. Pseudocode is fine but please include actual inputs.
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Reference `SPEC.md` sections where relevant (e.g., "per §10.3 the trust score should be 1.0 but I got 0.9").
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What you observed, including any error messages or stack traces.
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Node version, OS, network (base / base-sepolia).
+      placeholder: "Node 22, macOS 14, base-sepolia"

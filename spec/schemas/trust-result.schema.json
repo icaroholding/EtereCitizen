@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/trust-result.schema.json",
+  "title": "EtereCitizen Trust Result",
+  "description": "The output of a Verifier's verification flow. See SPEC.md §11.3.",
+  "type": "object",
+  "required": [
+    "did", "verified", "verificationLevel", "reputationScore",
+    "agentAge", "reviewCount", "walletConnected", "flags"
+  ],
+  "properties": {
+    "did":               { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+    "verified":          { "type": "boolean" },
+    "verificationLevel": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "reputationScore":   { "type": "number", "minimum": 0, "maximum": 5 },
+    "agentAge":          { "type": "integer", "minimum": 0 },
+    "reviewCount":       { "type": "integer", "minimum": 0 },
+    "walletConnected":   { "type": "boolean" },
+    "categoryRatings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "averageScore", "count"],
+        "properties": {
+          "category":     { "$ref": "vc-capability.schema.json#/$defs/Category" },
+          "averageScore": { "type": "number", "minimum": 0, "maximum": 5 },
+          "count":        { "type": "integer", "minimum": 0 },
+          "decayedScore": { "type": "number", "minimum": 0, "maximum": 5 }
+        }
+      }
+    },
+    "antifraud": { "$ref": "#/$defs/AntifraudFlags" },
+    "flags": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" }
+    },
+    "trustScore": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "$defs": {
+    "AntifraudFlags": {
+      "type": "object",
+      "required": ["isBurst", "isCluster", "isReciprocal", "suspicionScore"],
+      "properties": {
+        "isBurst":        { "type": "boolean" },
+        "isCluster":      { "type": "boolean" },
+        "isReciprocal":   { "type": "boolean" },
+        "suspicionScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "details":        { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

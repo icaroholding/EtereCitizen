@@ -1,0 +1,21 @@
+{
+  "description": "Canonical weight values at representative ages using the default config (halfLifeDays=90, minWeight=0.1). See SPEC §10.4.",
+  "input": {
+    "halfLifeDays": 90,
+    "minWeight":    0.1,
+    "ages": [0, 30, 45, 90, 180, 270, 360, 1000]
+  },
+  "expected": {
+    "weights": {
+      "0":    1.0,
+      "30":   0.7937005259840998,
+      "45":   0.7071067811865476,
+      "90":   0.5,
+      "180":  0.25,
+      "270":  0.125,
+      "360":  0.1,
+      "1000": 0.1
+    }
+  },
+  "notes": "At age 360 days the raw value is 2^(-4) = 0.0625, below minWeight, so the clamp produces 0.1. At age 1000 days the raw value is essentially zero and clamps to 0.1. All other values are below the clamp threshold."
+}

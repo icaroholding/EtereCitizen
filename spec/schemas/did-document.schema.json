@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/did-document.schema.json",
+  "title": "Agent DID Document",
+  "description": "A W3C DID Document produced by resolving an EtereCitizen Agent DID (did:ethr). See SPEC.md §5.3.",
+  "type": "object",
+  "required": ["@context", "id", "verificationMethod", "authentication"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "minItems": 1,
+      "contains": { "const": "https://www.w3.org/ns/did/v1" }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$"
+    },
+    "controller": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "verificationMethod": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "controller"],
+        "properties": {
+          "id":          { "type": "string" },
+          "type":        { "type": "string", "enum": ["EcdsaSecp256k1RecoveryMethod2020", "EcdsaSecp256k1VerificationKey2019"] },
+          "controller":  { "type": "string" },
+          "blockchainAccountId": { "type": "string" },
+          "publicKeyHex":        { "type": "string", "pattern": "^[0-9a-fA-F]+$" }
+        }
+      }
+    },
+    "authentication":  { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "assertionMethod": { "type": "array", "items": { "type": "string" } },
+    "service": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "serviceEndpoint"],
+        "properties": {
+          "id":              { "type": "string" },
+          "type":            { "type": "string" },
+          "serviceEndpoint": { }
+        }
+      }
+    },
+    "created": { "type": "string", "format": "date-time" },
+    "updated": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

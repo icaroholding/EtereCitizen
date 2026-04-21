@@ -1,0 +1,11 @@
+{
+  "description": "Rejects DIDs using a method other than did:ethr.",
+  "input": {
+    "did": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+  },
+  "expected": {
+    "isValidDID":   false,
+    "didToAddress": null,
+    "didToNetwork": null
+  }
+}

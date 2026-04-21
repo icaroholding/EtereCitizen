@@ -1,0 +1,11 @@
+{
+  "description": "Valid did:ethr on Base Sepolia (chain ID 84532 = 0x14a34).",
+  "input": {
+    "did": "did:ethr:0x14a34:0x1234567890123456789012345678901234567890"
+  },
+  "expected": {
+    "isValidDID":   true,
+    "didToAddress": "0x1234567890123456789012345678901234567890",
+    "didToNetwork": "base-sepolia"
+  }
+}

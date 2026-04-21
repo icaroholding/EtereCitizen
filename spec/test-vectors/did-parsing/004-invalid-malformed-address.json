@@ -1,0 +1,12 @@
+{
+  "description": "Rejects DIDs whose address part is not a 40-char 0x-prefixed hex string.",
+  "input": {
+    "did": "did:ethr:0x14a34:0xNOT_A_VALID_ADDRESS"
+  },
+  "expected": {
+    "isValidDID":   false,
+    "didToAddress": "0xNOT_A_VALID_ADDRESS",
+    "didToNetwork": "base-sepolia"
+  },
+  "notes": "The parser helpers didToAddress/didToNetwork only check structural prefix (did:ethr:); isValidDID additionally checks the address regex."
+}

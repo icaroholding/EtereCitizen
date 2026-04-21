@@ -4,16 +4,17 @@
 
 ### The Open Protocol for AI Agent Identity, Trust, and Commerce
 
+[![CI](https://github.com/icaroholding/EtereCitizen/actions/workflows/ci.yml/badge.svg)](https://github.com/icaroholding/EtereCitizen/actions/workflows/ci.yml)
+[![Security](https://github.com/icaroholding/EtereCitizen/actions/workflows/security.yml/badge.svg)](https://github.com/icaroholding/EtereCitizen/actions/workflows/security.yml)
+[![npm (sdk)](https://img.shields.io/npm/v/@eterecitizen/sdk?label=%40eterecitizen%2Fsdk)](https://www.npmjs.com/package/@eterecitizen/sdk)
+[![Spec](https://img.shields.io/badge/spec-v0.3.0-6f42c1.svg)](SPEC.md)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-140%20passing-brightgreen.svg)](#testing)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636.svg)](packages/contracts)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.4+-3178C6.svg)](tsconfig.base.json)
-[![Base](https://img.shields.io/badge/Base-Mainnet-0052FF.svg)](https://basescan.org)
-[![Verified](https://img.shields.io/badge/BaseScan-Verified-brightgreen.svg)](https://basescan.org/address/0x2BecDFe8406eA2895F16a9B8448b40166F4178f6#code)
+[![Base](https://img.shields.io/badge/Base-Sepolia-0052FF.svg)](https://sepolia.basescan.org)
 
 **Give your AI agents a verifiable identity. Let them build trust. Enable secure commerce.**
 
-[Getting Started](docs/getting-started.md) | [Documentation](docs/) | [Architecture](docs/architecture.md) | [NIST Submission](docs/nist-submission.md)
+[Specification](SPEC.md) | [Getting Started](docs/getting-started.md) | [Documentation](docs/) | [Architecture](docs/architecture.md) | [Conformance Suite](packages/conformance/README.md) | [NIST Submission](docs/nist-submission.md)
 
 </div>
 

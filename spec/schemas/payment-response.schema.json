@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/payment-response.schema.json",
+  "title": "EtereCitizen Payment Response",
+  "description": "Reply produced by a receiving Agent in response to a PaymentRequest. See SPEC.md §12.2.",
+  "type": "object",
+  "required": ["address", "amount", "currency", "network"],
+  "properties": {
+    "address":   { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "amount":    { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$" },
+    "currency":  { "type": "string", "minLength": 1 },
+    "network":   { "type": "string", "minLength": 1 },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "paymentId": { "type": "string" }
+  },
+  "additionalProperties": false
+}

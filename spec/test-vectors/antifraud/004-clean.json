@@ -1,0 +1,16 @@
+{
+  "description": "Spread-out reviews from distinct reviewers produce no flags.",
+  "input": {
+    "reviews": [
+      { "reviewerDID": "did:ethr:0x14a34:0xA0000000000000000000000000000000000000AA", "reviewedDID": "did:ethr:0x14a34:0xB0000000000000000000000000000000000000BB", "timestamp": "2026-01-01T10:00:00.000Z", "rating": 4, "category": "data-analysis" },
+      { "reviewerDID": "did:ethr:0x14a34:0xC0000000000000000000000000000000000000CC", "reviewedDID": "did:ethr:0x14a34:0xB0000000000000000000000000000000000000BB", "timestamp": "2026-02-15T10:00:00.000Z", "rating": 5, "category": "data-analysis" },
+      { "reviewerDID": "did:ethr:0x14a34:0xD0000000000000000000000000000000000000DD", "reviewedDID": "did:ethr:0x14a34:0xB0000000000000000000000000000000000000BB", "timestamp": "2026-03-20T10:00:00.000Z", "rating": 3, "category": "translation" }
+    ]
+  },
+  "expected": {
+    "isBurst":        false,
+    "isCluster":      false,
+    "isReciprocal":   false,
+    "suspicionScore": 0
+  }
+}

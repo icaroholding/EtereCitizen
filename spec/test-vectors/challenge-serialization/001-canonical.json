@@ -1,0 +1,15 @@
+{
+  "description": "Canonical serialization of a ChallengeMessage per SPEC §12.1.2. Lines are separated by LF (\\n). A blank line separates the header from the statement and the statement from the parameter block.",
+  "input": {
+    "domain":    "eterecitizen.ai",
+    "address":   "0x1234567890123456789012345678901234567890",
+    "statement": "Sign this message to prove ownership of this wallet for EtereCitizen protocol.",
+    "nonce":     "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+    "issuedAt":  "2026-04-21T10:00:00.000Z",
+    "expiresAt": "2026-04-21T10:05:00.000Z",
+    "chainId":   84532
+  },
+  "expected": {
+    "serialized": "eterecitizen.ai wants you to sign in with your Ethereum account:\n0x1234567890123456789012345678901234567890\n\nSign this message to prove ownership of this wallet for EtereCitizen protocol.\n\nChain ID: 84532\nNonce: a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4\nIssued At: 2026-04-21T10:00:00.000Z\nExpiration Time: 2026-04-21T10:05:00.000Z"
+  }
+}

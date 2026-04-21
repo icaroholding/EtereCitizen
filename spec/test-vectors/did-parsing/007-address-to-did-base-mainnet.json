@@ -1,0 +1,10 @@
+{
+  "description": "addressToDID MUST produce did:ethr:0x2105:<addr> on base mainnet (§5.5.1).",
+  "input": {
+    "address": "0xABCDEFabcdefABCDEFabcdefABCDEFabcdef1234",
+    "network": "base"
+  },
+  "expected": {
+    "addressToDID": "did:ethr:0x2105:0xABCDEFabcdefABCDEFabcdefABCDEFabcdef1234"
+  }
+}
