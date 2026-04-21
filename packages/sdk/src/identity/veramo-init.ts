@@ -1,11 +1,5 @@
 import { DataSource } from 'typeorm';
-import {
-  Entities,
-  migrations,
-  KeyStore,
-  DIDStore,
-  PrivateKeyStore,
-} from '@veramo/data-store';
+import { Entities, migrations } from '@veramo/data-store';
 import { randomBytes } from 'crypto';
 import { join } from 'path';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'fs';

@@ -20,10 +20,6 @@ import { RegistryManager } from './registry/registry-manager.js';
 import { SQLiteStore } from './storage/sqlite-store.js';
 import { createBaseProvider } from './blockchain/base-provider.js';
 import { createContractClients } from './blockchain/contract-clients.js';
-import { createChildLogger } from './logger.js';
-
-const log = createChildLogger('eterecitizen');
-
 export interface EtereCitizenConfig {
   network?: NetworkName;
   pinataApiKey?: string;
@@ -187,7 +183,6 @@ export class EtereCitizen {
   }
 
   static async verify(did: string, config?: EtereCitizenConfig): Promise<TrustResult> {
-    const instance = EtereCitizen.getInstance(config);
     const network = config?.network || DEFAULT_NETWORK;
 
     const ipfs = new IPFSStorage({

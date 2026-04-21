@@ -9,15 +9,16 @@
     "deploy:mainnet": "hardhat run scripts/deploy.ts --network base",
     "verify": "hardhat run scripts/verify.ts",
     "clean": "hardhat clean && rm -rf dist",
-    "build": "hardhat compile",
-    "typecheck": "tsc --noEmit"
+    "build": "hardhat compile"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "dotenv": "^16.0.0",
     "hardhat": "^2.22.0",
     "typescript": "^5.4.0"
   },

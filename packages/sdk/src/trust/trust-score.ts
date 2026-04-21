@@ -1,5 +1,4 @@
 import type { TrustResult } from '@eterecitizen/common';
-import { VerificationLevel } from '@eterecitizen/common';
 
 const WEIGHTS = {
   reputation: 0.4,

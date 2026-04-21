@@ -1,5 +1,5 @@
 import type { DIDCreateOptions, DIDResolutionResult, AgentDIDDocument, DIDUpdateOptions } from '@eterecitizen/common';
-import { NETWORKS, type NetworkName, addressToDID } from '@eterecitizen/common';
+import { NETWORKS, type NetworkName } from '@eterecitizen/common';
 import type { VeramoAgent } from './veramo-config.js';
 import { buildAgentDIDDocument } from './did-document-builder.js';
 import { IPFSStorage } from './ipfs-storage.js';

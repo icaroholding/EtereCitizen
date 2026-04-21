@@ -1,6 +1,5 @@
 import type {
   AgentProfile,
-  AgentConfig,
   WalletConfig,
   WalletAdapter,
   WalletInfo,
@@ -23,7 +22,6 @@ import { WalletOwnershipManager } from './credentials/wallet-ownership.js';
 import { PresentationManager } from './credentials/presentation.js';
 import { createWalletAdapter } from './wallet/adapter-factory.js';
 import { generateChallenge, challengeToMessage } from './wallet/challenge.js';
-import { ReputationManager } from './reputation/reputation-manager.js';
 import { RegistryManager } from './registry/registry-manager.js';
 import { SQLiteStore } from './storage/sqlite-store.js';
 

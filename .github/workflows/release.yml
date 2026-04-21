@@ -1,0 +1,96 @@
+name: Release
+
+# Publishes an @eterecitizen/* package to npm using Trusted Publishing (OIDC).
+#
+# PREREQUISITE (one-time setup per package on npmjs.com):
+#   1. Go to https://www.npmjs.com/package/@eterecitizen/<name>/access
+#   2. Under "Publishing access" → "Trusted Publisher" → "Add"
+#   3. Publisher: GitHub Actions
+#      Organization/user: icaroholding
+#      Repository:        EtereCitizen
+#      Workflow filename: release.yml
+#      Environment:       (leave blank)
+#   4. Save. Repeat for each package to be published via CI.
+#
+# USAGE:
+#   1. Bump the version in packages/<name>/package.json on main (via a PR)
+#   2. GitHub → Actions → Release → "Run workflow" → choose package + dist-tag
+#   3. Workflow publishes with provenance and pushes a git tag <name>-v<version>
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish'
+        required: true
+        type: choice
+        options:
+          - sdk
+          - cli
+          - common
+          - create
+          - mcp-server
+      dist_tag:
+        description: 'npm dist-tag (use "next" for prereleases)'
+        required: false
+        default: latest
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish @eterecitizen/${{ inputs.package }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm build
+
+      - name: Read package version
+        id: pkg
+        run: |
+          VERSION=$(node -p "require('./packages/${{ inputs.package }}/package.json').version")
+          NAME=$(node -p "require('./packages/${{ inputs.package }}/package.json').name")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "name=${NAME}" >> "$GITHUB_OUTPUT"
+          echo "Publishing ${NAME}@${VERSION} with dist-tag '${{ inputs.dist_tag }}'"
+
+      - name: Verify version not already published
+        run: |
+          NAME="${{ steps.pkg.outputs.name }}"
+          VERSION="${{ steps.pkg.outputs.version }}"
+          if npm view "${NAME}@${VERSION}" version > /dev/null 2>&1; then
+            echo "::error::${NAME}@${VERSION} is already published. Bump the version first."
+            exit 1
+          fi
+
+      - name: Publish to npm
+        working-directory: packages/${{ inputs.package }}
+        run: npm publish --provenance --access public --tag "${{ inputs.dist_tag }}"
+
+      - name: Create git tag
+        run: |
+          TAG="${{ inputs.package }}-v${{ steps.pkg.outputs.version }}"
+          git tag "${TAG}"
+          git push origin "${TAG}"
