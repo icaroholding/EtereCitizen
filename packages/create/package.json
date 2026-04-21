@@ -2,6 +2,11 @@
   "name": "@eterecitizen/create",
   "version": "0.1.0",
   "description": "Interactive scaffolder for EtereCitizen AI agent identity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icaroholding/EtereCitizen.git",
+    "directory": "packages/create"
+  },
   "type": "module",
   "bin": {
     "create-eterecitizen": "./dist/index.js"

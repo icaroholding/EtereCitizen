@@ -1,7 +1,12 @@
 {
   "name": "@eterecitizen/common",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Shared types, schemas, and constants for EtereCitizen protocol",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icaroholding/EtereCitizen.git",
+    "directory": "packages/common"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

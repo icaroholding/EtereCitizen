@@ -2,6 +2,11 @@
   "name": "@eterecitizen/sdk",
   "version": "0.1.0",
   "description": "Core TypeScript SDK for EtereCitizen protocol — AI agent identity, trust, and commerce",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icaroholding/EtereCitizen.git",
+    "directory": "packages/sdk"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
