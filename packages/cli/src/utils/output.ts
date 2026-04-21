@@ -60,8 +60,11 @@ function getLevelColor(level: VerificationLevel) {
   }
 }
 
+// eslint-disable-next-line no-control-regex
+const ANSI_ESCAPE_REGEX = /\u001b\[[0-9;]*m/g;
+
 function centerText(text: string, width: number): string {
-  const stripped = text.replace(/\u001b\[[0-9;]*m/g, '');
+  const stripped = text.replace(ANSI_ESCAPE_REGEX, '');
   const padding = Math.max(0, width - stripped.length);
   const left = Math.floor(padding / 2);
   const right = padding - left;
@@ -69,7 +72,7 @@ function centerText(text: string, width: number): string {
 }
 
 function padRight(text: string, width: number): string {
-  const stripped = text.replace(/\u001b\[[0-9;]*m/g, '');
+  const stripped = text.replace(ANSI_ESCAPE_REGEX, '');
   const padding = Math.max(0, width - stripped.length);
   return text + ' '.repeat(padding);
 }

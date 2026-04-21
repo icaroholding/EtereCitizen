@@ -1,4 +1,3 @@
-import type { ICredentialPlugin } from '@veramo/core';
 import type { VerifiableCredential } from '@eterecitizen/common';
 import type { VeramoAgent } from '../identity/veramo-config.js';
 
