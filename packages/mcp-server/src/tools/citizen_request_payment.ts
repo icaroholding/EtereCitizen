@@ -33,6 +33,7 @@ export const citizenRequestPaymentTool = {
   }) {
     const agent = await getCurrentAgent();
     const response = await agent.requestPaymentAddress(params.recipientDID, {
+      recipientDID: params.recipientDID,
       amount: params.amount,
       currency: params.currency,
       network: params.network as any,
