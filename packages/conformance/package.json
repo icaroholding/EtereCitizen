@@ -1,0 +1,40 @@
+{
+  "name": "@eterecitizen/conformance",
+  "version": "0.1.0",
+  "description": "Conformance test suite for EtereCitizen protocol implementations. Loads canonical test vectors and runs them against any adapter.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icaroholding/EtereCitizen.git",
+    "directory": "packages/conformance"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "vectors"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts && node scripts/copy-vectors.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist vectors"
+  },
+  "dependencies": {
+    "@eterecitizen/common": "workspace:*"
+  },
+  "devDependencies": {
+    "@eterecitizen/sdk": "workspace:*",
+    "@types/node": "^25.3.5",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "license": "Apache-2.0"
+}

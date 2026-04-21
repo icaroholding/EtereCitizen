@@ -99,6 +99,28 @@ importers:
         specifier: ^5.4.0
         version: 5.9.3
 
+  packages/conformance:
+    dependencies:
+      '@eterecitizen/common':
+        specifier: workspace:*
+        version: link:../common
+    devDependencies:
+      '@eterecitizen/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+      '@types/node':
+        specifier: ^25.3.5
+        version: 25.3.5
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@25.3.5)(lightningcss@1.31.1)(terser@5.46.0)
+
   packages/contracts:
     dependencies:
       '@openzeppelin/contracts':
