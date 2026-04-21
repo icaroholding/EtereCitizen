@@ -1,0 +1,140 @@
+name: Security
+
+# Free-tier static and symbolic analysis of the Solidity contracts.
+#
+# Slither runs on every PR touching contracts/. Mythril is a deeper symbolic
+# executor and is relatively slow, so it runs only on nightly schedule and
+# via manual dispatch.
+
+on:
+  pull_request:
+    paths:
+      - 'packages/contracts/**'
+      - '.github/workflows/security.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'packages/contracts/**'
+      - '.github/workflows/security.yml'
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  slither:
+    name: Slither static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Compile contracts
+        working-directory: packages/contracts
+        run: pnpm hardhat compile
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.4.0
+        id: slither
+        with:
+          target: packages/contracts
+          ignore-compile: true
+          fail-on: medium
+          slither-args: --exclude naming-convention,external-function,solc-version
+          sarif: slither-results.sarif
+
+      - name: Upload SARIF results
+        if: always() && steps.slither.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.slither.outputs.sarif }}
+          category: slither
+
+  mythril:
+    name: Mythril symbolic execution (nightly)
+    # Mythril takes ~10-20 minutes per contract. Run it on schedule + manual
+    # dispatch only so it doesn't block PR merges.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Mythril
+        run: pip install mythril
+
+      - name: Run Mythril on EtereCitizen.sol
+        run: |
+          myth analyze packages/contracts/contracts/EtereCitizen.sol \
+            --solv 0.8.24 \
+            --execution-timeout 600 \
+            --max-depth 20 \
+            -o json > mythril-etere.json || true
+          cat mythril-etere.json
+
+      - name: Run Mythril on CitizenReputation.sol
+        run: |
+          myth analyze packages/contracts/contracts/CitizenReputation.sol \
+            --solv 0.8.24 \
+            --execution-timeout 600 \
+            --max-depth 20 \
+            -o json > mythril-reputation.json || true
+          cat mythril-reputation.json
+
+      - name: Upload Mythril reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mythril-reports
+          path: mythril-*.json
+          retention-days: 30
+
+  npm-audit:
+    name: npm dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm audit (production deps)
+        run: pnpm audit --prod --audit-level=high
+        continue-on-error: false
