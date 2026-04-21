@@ -2,6 +2,27 @@
 
 Items identified during the CEO Plan Review (2026-03-26). Status updated 2026-04-21.
 
+## Phase 0 — Standards foundation
+
+### Done (2026-04-21)
+- [DONE] **SPEC.md** — RFC-style protocol specification v0.3 with numbered conformance clauses (C-001 … C-1130)
+- [DONE] **JSON Schemas** for every wire-format payload (`spec/schemas/*.schema.json`)
+- [DONE] **Test vectors** — deterministic input/expected pairs (`spec/test-vectors/`)
+- [DONE] **`@eterecitizen/conformance`** package — runs vectors against any adapter; 24 tests green against the reference SDK
+- [DONE] CI workflow (test + lint + typecheck + build) on every PR
+- [DONE] Release workflow using npm Trusted Publishing (OIDC) — no long-lived tokens
+- [DONE] Security workflow — Slither on PR, Mythril nightly, pnpm audit
+- [DONE] GitHub issue/PR templates, CODEOWNERS
+- [DONE] README badges (CI, security, npm version, spec version)
+
+### Still to do
+- [ ] W3C DID Methods Registry submission (did:ethr already registered; register EtereCitizen as a profile / note)
+- [ ] Submit protocol specification to W3C Community Group
+- [ ] Decentralized Identity Foundation (DIF) free-tier membership
+- [ ] arXiv paper on agent identity + trust
+- [ ] Foundry fuzz + invariant tests to complement hardhat unit tests
+- [ ] Docusaurus docs site at `docs.eterecitizen.io`
+
 ## Phase 1 — Production Readiness
 
 ### Done
