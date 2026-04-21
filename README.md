@@ -14,7 +14,7 @@
 
 **Give your AI agents a verifiable identity. Let them build trust. Enable secure commerce.**
 
-[Specification](SPEC.md) | [Getting Started](docs/getting-started.md) | [Documentation](docs/) | [Architecture](docs/architecture.md) | [Conformance Suite](packages/conformance/README.md) | [NIST Submission](docs/nist-submission.md)
+[Specification](SPEC.md) | [Conformance](CONFORMANCE.md) | [Threat Model](THREAT-MODEL.md) | [Getting Started](docs/getting-started.md) | [Architecture](docs/architecture.md) | [ADRs](docs/adr/) | [NIST Submission](docs/nist-submission.md)
 
 </div>
 
