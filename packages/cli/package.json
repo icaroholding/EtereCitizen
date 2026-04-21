@@ -2,6 +2,11 @@
   "name": "@eterecitizen/cli",
   "version": "0.1.0",
   "description": "CLI tool for EtereCitizen protocol",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icaroholding/EtereCitizen.git",
+    "directory": "packages/cli"
+  },
   "type": "module",
   "bin": {
     "citizen": "./dist/index.js"

@@ -2,6 +2,11 @@
   "name": "@eterecitizen/mcp-server",
   "version": "0.1.0",
   "description": "MCP Server for EtereCitizen agent-to-agent verification",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icaroholding/EtereCitizen.git",
+    "directory": "packages/mcp-server"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
