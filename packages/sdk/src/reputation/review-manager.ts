@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import type { ReviewInput, Review } from '@eterecitizen/common';
+import type { ReviewInput } from '@eterecitizen/common';
 import { didToAddress, reviewInputSchema } from '@eterecitizen/common';
 import type { ContractClients } from '../blockchain/contract-clients.js';
 import { IPFSStorage } from '../identity/ipfs-storage.js';

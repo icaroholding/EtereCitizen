@@ -1,7 +1,6 @@
 import type { ReputationScore, CategoryRating, Review, TemporalDecayConfig } from '@eterecitizen/common';
 import { DEFAULT_TEMPORAL_DECAY, didToAddress } from '@eterecitizen/common';
 import { calculateDecayedScore } from './temporal-decay.js';
-import { detectAntifraudFlags } from './antifraud.js';
 import type { ContractClients } from '../blockchain/contract-clients.js';
 
 export class ReputationManager {
