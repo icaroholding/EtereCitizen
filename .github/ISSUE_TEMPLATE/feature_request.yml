@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a new capability for the protocol or an implementation.
+labels: ["enhancement"]
+body:
+  - type: input
+    id: scope
+    attributes:
+      label: Scope
+      description: Does this affect the protocol (SPEC.md) or only an implementation?
+      placeholder: "implementation | protocol"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve? What can't you do today that you'd like to?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed design
+      description: What does the new API / wire format / contract interface look like?
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing workarounds, related standards (DIF, W3C, Ethereum ERCs), why they fall short.

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security disclosure
+    url: https://github.com/icaroholding/EtereCitizen/blob/main/SECURITY.md
+    about: For security vulnerabilities, DO NOT open a public issue. Follow the private reporting process documented in SECURITY.md.
+  - name: General questions
+    url: https://github.com/icaroholding/EtereCitizen/discussions
+    about: For usage questions, design discussions, or anything not a bug or feature request.

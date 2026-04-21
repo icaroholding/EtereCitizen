@@ -1,0 +1,18 @@
+# Code owners for EtereCitizen. Applied on every PR to request review.
+# See https://docs.github.com/en/repositories/managing-your-repositories-settings-and-security/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+*                         @icaroholding
+
+# Normative specification — spec changes deserve special attention
+/SPEC.md                  @icaroholding
+/spec/                    @icaroholding
+
+# Smart contracts — anything that touches on-chain code
+/packages/contracts/      @icaroholding
+
+# CI / release infrastructure
+/.github/                 @icaroholding
+
+# Conformance test suite — changes here affect every implementation
+/packages/conformance/    @icaroholding
