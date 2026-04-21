@@ -1,0 +1,27 @@
+{
+  "description": "Agent A reviews B and then B reviews A → reciprocal flag, suspicionScore contribution = 0.4.",
+  "input": {
+    "reviews": [
+      {
+        "reviewerDID": "did:ethr:0x14a34:0xAAAA000000000000000000000000000000000001",
+        "reviewedDID": "did:ethr:0x14a34:0xBBBB000000000000000000000000000000000001",
+        "timestamp":   "2026-04-21T10:00:00.000Z",
+        "rating":      5,
+        "category":    "code-review"
+      },
+      {
+        "reviewerDID": "did:ethr:0x14a34:0xBBBB000000000000000000000000000000000001",
+        "reviewedDID": "did:ethr:0x14a34:0xAAAA000000000000000000000000000000000001",
+        "timestamp":   "2026-04-22T12:00:00.000Z",
+        "rating":      5,
+        "category":    "code-review"
+      }
+    ]
+  },
+  "expected": {
+    "isBurst":        false,
+    "isCluster":      false,
+    "isReciprocal":   true,
+    "suspicionScore": 0.4
+  }
+}

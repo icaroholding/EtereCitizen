@@ -1,0 +1,16 @@
+{
+  "description": "Fully verified agent, max reputation, 1-year old, many reviews, wallet connected, no flags → trust score = 1.0.",
+  "input": {
+    "verified":          true,
+    "reputationScore":   5.0,
+    "verificationLevel": 3,
+    "agentAge":          365,
+    "reviewCount":       99,
+    "walletConnected":   true,
+    "flags":             [],
+    "antifraud":         null
+  },
+  "expected": {
+    "trustScore": 1.0
+  }
+}

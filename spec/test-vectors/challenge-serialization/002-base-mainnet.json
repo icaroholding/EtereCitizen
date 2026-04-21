@@ -1,0 +1,15 @@
+{
+  "description": "Challenge serialization on Base mainnet (chainId 8453).",
+  "input": {
+    "domain":    "eterecitizen.ai",
+    "address":   "0xABCDEFabcdefABCDEFabcdefABCDEFabcdef1234",
+    "statement": "Sign this message to prove ownership of this wallet for EtereCitizen protocol.",
+    "nonce":     "0123456789abcdef0123456789abcdef",
+    "issuedAt":  "2026-04-21T12:00:00.000Z",
+    "expiresAt": "2026-04-21T12:05:00.000Z",
+    "chainId":   8453
+  },
+  "expected": {
+    "serialized": "eterecitizen.ai wants you to sign in with your Ethereum account:\n0xABCDEFabcdefABCDEFabcdefABCDEFabcdef1234\n\nSign this message to prove ownership of this wallet for EtereCitizen protocol.\n\nChain ID: 8453\nNonce: 0123456789abcdef0123456789abcdef\nIssued At: 2026-04-21T12:00:00.000Z\nExpiration Time: 2026-04-21T12:05:00.000Z"
+  }
+}

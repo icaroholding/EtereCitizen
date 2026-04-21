@@ -1,0 +1,11 @@
+{
+  "description": "Valid did:ethr on Base Mainnet (chain ID 8453 = 0x2105).",
+  "input": {
+    "did": "did:ethr:0x2105:0xABCDEFabcdefABCDEFabcdefABCDEFabcdef1234"
+  },
+  "expected": {
+    "isValidDID":   true,
+    "didToAddress": "0xABCDEFabcdefABCDEFabcdefABCDEFabcdef1234",
+    "didToNetwork": "base"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Rejects strings that are not even well-formed DIDs (fewer than 4 colon-separated parts).",
+  "input": {
+    "did": "did:ethr:0x1234567890123456789012345678901234567890"
+  },
+  "expected": {
+    "isValidDID":   false,
+    "didToAddress": null,
+    "didToNetwork": null
+  }
+}

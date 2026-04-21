@@ -189,14 +189,14 @@ Where:
 
 #### 5.2.1 Examples
 
-Base Sepolia (chain ID 84532 = 0x14b32):
+Base Sepolia (chain ID 84532 = 0x14a34):
 ```
-did:ethr:0x14b32:0x1234567890123456789012345678901234567890
+did:ethr:0x14a34:0x1234567890123456789012345678901234567890
 ```
 
-Base Mainnet (chain ID 8453 = 0x20b5):
+Base Mainnet (chain ID 8453 = 0x2105):
 ```
-did:ethr:0x20b5:0x1234567890123456789012345678901234567890
+did:ethr:0x2105:0x1234567890123456789012345678901234567890
 ```
 
 ### 5.3 DID Document
@@ -255,8 +255,8 @@ In v0.3, the following EVM networks are supported:
 
 | Network name | Chain ID | Explorer | Notes |
 |---|---|---|---|
-| `base-sepolia` | 84532 (0x14b32) | sepolia.basescan.org | Default for testing |
-| `base` | 8453 (0x20b5) | basescan.org | Production (requires audit before use) |
+| `base-sepolia` | 84532 (0x14a34) | sepolia.basescan.org | Default for testing |
+| `base` | 8453 (0x2105) | basescan.org | Production (requires audit before use) |
 
 **[C-040]** Implementations MUST reject DIDs whose embedded chain ID does not correspond to a supported network.
 **[C-041]** Implementations MAY add additional networks; see §17.3.

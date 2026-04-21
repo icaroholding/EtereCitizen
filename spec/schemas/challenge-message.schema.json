@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/challenge-message.schema.json",
+  "title": "EtereCitizen Wallet Ownership Challenge Message",
+  "description": "The challenge message used to prove wallet ownership. See SPEC.md §12.1.",
+  "type": "object",
+  "required": ["domain", "address", "statement", "nonce", "issuedAt", "expiresAt", "chainId"],
+  "properties": {
+    "domain":    { "type": "string", "const": "eterecitizen.ai" },
+    "address":   { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "statement": {
+      "type": "string",
+      "const": "Sign this message to prove ownership of this wallet for EtereCitizen protocol."
+    },
+    "nonce":     { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "issuedAt":  { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "chainId":   { "type": "integer", "minimum": 1 }
+  },
+  "additionalProperties": false
+}

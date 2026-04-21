@@ -1,0 +1,18 @@
+{
+  "description": "Weighted aggregate of three reviews at ages 0, 90, 180 days with ratings 5, 4, 3. Default config (halfLife=90, minWeight=0.1).",
+  "input": {
+    "halfLifeDays": 90,
+    "minWeight":    0.1,
+    "reviews": [
+      { "rating": 5, "ageDays": 0   },
+      { "rating": 4, "ageDays": 90  },
+      { "rating": 3, "ageDays": 180 }
+    ]
+  },
+  "expected": {
+    "weights":          [1.0, 0.5, 0.25],
+    "weightedSum":      7.75,
+    "totalWeight":      1.75,
+    "decayedScore":     4.428571428571429
+  }
+}

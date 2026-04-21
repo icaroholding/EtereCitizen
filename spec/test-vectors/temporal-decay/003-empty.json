@@ -1,0 +1,11 @@
+{
+  "description": "Empty review set MUST produce a decayed score of 0 (division-by-zero guard).",
+  "input": {
+    "halfLifeDays": 90,
+    "minWeight":    0.1,
+    "reviews":      []
+  },
+  "expected": {
+    "decayedScore": 0
+  }
+}

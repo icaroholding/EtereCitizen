@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/vc-work-history.schema.json",
+  "title": "EtereCitizen Work History Verifiable Credential (Review)",
+  "description": "Attests to a completed transaction and records a rating. The on-chain form is a SHA-256 hash of this credential. See SPEC.md §6.6.",
+  "type": "object",
+  "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "https://www.w3.org/2018/credentials/v1" } },
+        { "contains": { "const": "https://eterecitizen.ai/ns/vc/work-history/v1" } }
+      ]
+    },
+    "id":   { "type": "string" },
+    "type": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "VerifiableCredential" } },
+        { "contains": { "const": "EtereCitizenWorkHistory" } }
+      ]
+    },
+    "issuer": {
+      "oneOf": [
+        { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+      ]
+    },
+    "issuanceDate":   { "type": "string", "format": "date-time" },
+    "expirationDate": { "type": "string", "format": "date-time" },
+    "credentialSubject": {
+      "type": "object",
+      "required": ["id", "taskDescription", "category", "rating", "transactionHash", "completedAt", "reviewerDID"],
+      "properties": {
+        "id":              { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        "taskDescription": { "type": "string", "minLength": 1 },
+        "category":        { "$ref": "vc-capability.schema.json#/$defs/Category" },
+        "rating":          { "type": "integer", "minimum": 1, "maximum": 5 },
+        "transactionHash": { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" },
+        "completedAt":     { "type": "string", "format": "date-time" },
+        "reviewerDID":     { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        "comment":         { "type": "string" }
+      }
+    },
+    "proof": { "type": "object" }
+  }
+}

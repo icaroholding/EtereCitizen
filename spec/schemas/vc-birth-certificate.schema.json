@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/vc-birth-certificate.schema.json",
+  "title": "EtereCitizen Birth Certificate Verifiable Credential",
+  "description": "Attests to the creation of an Agent. See SPEC.md §6.3.",
+  "type": "object",
+  "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "https://www.w3.org/2018/credentials/v1" } },
+        { "contains": { "const": "https://eterecitizen.ai/ns/vc/birth-certificate/v1" } }
+      ]
+    },
+    "id":   { "type": "string" },
+    "type": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "VerifiableCredential" } },
+        { "contains": { "const": "EtereCitizenBirthCertificate" } }
+      ]
+    },
+    "issuer": {
+      "oneOf": [
+        { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" }
+          }
+        }
+      ]
+    },
+    "issuanceDate":   { "type": "string", "format": "date-time" },
+    "expirationDate": { "type": "string", "format": "date-time" },
+    "credentialSubject": {
+      "type": "object",
+      "required": ["id", "name", "createdAt", "network", "protocolVersion"],
+      "properties": {
+        "id":              { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        "name":            { "type": "string", "minLength": 1, "maxLength": 64 },
+        "createdAt":       { "type": "string", "format": "date-time" },
+        "network":         { "type": "string", "enum": ["base", "base-sepolia"] },
+        "protocolVersion": { "type": "string", "const": "0.3" }
+      }
+    },
+    "proof": { "$ref": "#/$defs/JwtProof" }
+  },
+  "$defs": {
+    "JwtProof": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type":               { "type": "string", "const": "JwtProof2020" },
+        "created":            { "type": "string", "format": "date-time" },
+        "verificationMethod": { "type": "string" },
+        "proofPurpose":       { "type": "string" },
+        "jws":                { "type": "string" },
+        "proofValue":         { "type": "string" }
+      }
+    }
+  }
+}

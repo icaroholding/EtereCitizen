@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/search-filters.schema.json",
+  "title": "EtereCitizen Agent Search Filters",
+  "description": "Filters for the Discovery layer. See SPEC.md §13.3.",
+  "type": "object",
+  "properties": {
+    "capability": { "$ref": "vc-capability.schema.json#/$defs/Category" },
+    "minRating":  { "type": "number", "minimum": 0, "maximum": 5 },
+    "minLevel":   { "type": "integer", "minimum": 0, "maximum": 3 },
+    "name":       { "type": "string" },
+    "active":     { "type": "boolean", "default": true },
+    "limit":      { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
+    "offset":     { "type": "integer", "minimum": 0, "default": 0 }
+  },
+  "additionalProperties": false
+}

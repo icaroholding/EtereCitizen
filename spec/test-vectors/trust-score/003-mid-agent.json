@@ -1,0 +1,25 @@
+{
+  "description": "Mid-tier agent: reputation 4/5, domain verification, 90-day old, 9 reviews, wallet connected.",
+  "input": {
+    "verified":          true,
+    "reputationScore":   4.0,
+    "verificationLevel": 1,
+    "agentAge":          90,
+    "reviewCount":       9,
+    "walletConnected":   true,
+    "flags":             [],
+    "antifraud":         null
+  },
+  "expected": {
+    "trustScore": 0.5903196347031964
+  },
+  "derivation": {
+    "R1_reputation":       0.32,
+    "R2_verification":     0.08333333333333333,
+    "R3_agentAge":         0.03698630136986301,
+    "R4_reviewCount":      0.05,
+    "R5_walletConnected":  0.1,
+    "sumBeforePenalties":  0.5903196347031964,
+    "penalties":           "none"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Unverified agent returns 0.0 regardless of other inputs (C-501).",
+  "input": {
+    "verified":          false,
+    "reputationScore":   5.0,
+    "verificationLevel": 3,
+    "agentAge":          365,
+    "reviewCount":       99,
+    "walletConnected":   true,
+    "flags":             [],
+    "antifraud":         null
+  },
+  "expected": {
+    "trustScore": 0.0
+  }
+}

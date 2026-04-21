@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/vc-compliance.schema.json",
+  "title": "EtereCitizen Compliance Verifiable Credential",
+  "description": "Attests that the Agent meets a named compliance standard. See SPEC.md §6.8.",
+  "type": "object",
+  "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "contains": { "const": "https://www.w3.org/2018/credentials/v1" }
+    },
+    "id":   { "type": "string" },
+    "type": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "VerifiableCredential" } },
+        { "contains": { "const": "EtereCitizenCompliance" } }
+      ]
+    },
+    "issuer": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+      ]
+    },
+    "issuanceDate":   { "type": "string", "format": "date-time" },
+    "expirationDate": { "type": "string", "format": "date-time" },
+    "credentialSubject": {
+      "type": "object",
+      "required": ["id", "standard", "issuedBy", "validUntil"],
+      "properties": {
+        "id":         { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        "standard":   { "type": "string", "minLength": 1 },
+        "issuedBy":   { "type": "string", "minLength": 1 },
+        "validUntil": { "type": "string", "format": "date-time" },
+        "scope":      { "type": "string" }
+      }
+    },
+    "proof": { "type": "object" }
+  }
+}

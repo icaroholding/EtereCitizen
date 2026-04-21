@@ -1,0 +1,26 @@
+{
+  "description": "Agent with antifraud suspicionScore 0.8 (> 0.5): final multiplier = (1 - 0.8 * 0.5) = 0.6.",
+  "input": {
+    "verified":          true,
+    "reputationScore":   4.0,
+    "verificationLevel": 2,
+    "agentAge":          180,
+    "reviewCount":       50,
+    "walletConnected":   true,
+    "flags":             [],
+    "antifraud": {
+      "isBurst":        true,
+      "isCluster":      false,
+      "isReciprocal":   false,
+      "suspicionScore": 0.8
+    }
+  },
+  "expected": {
+    "trustScore": 0.4476106669267737
+  },
+  "derivation": {
+    "sumBeforePenalties":    0.7460177782112895,
+    "antifraudMultiplier":   0.6,
+    "afterAntifraud":        0.4476106669267737
+  }
+}

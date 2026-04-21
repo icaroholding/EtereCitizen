@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/vc-creator-verification.schema.json",
+  "title": "EtereCitizen Creator Verification Verifiable Credential",
+  "description": "Attests that an Authorized Verifier has verified the Agent's operator identity. See SPEC.md §6.7.",
+  "type": "object",
+  "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "contains": { "const": "https://www.w3.org/2018/credentials/v1" }
+    },
+    "id":   { "type": "string" },
+    "type": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "VerifiableCredential" } },
+        { "contains": { "const": "EtereCitizenCreatorVerification" } }
+      ]
+    },
+    "issuer": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+      ]
+    },
+    "issuanceDate":   { "type": "string", "format": "date-time" },
+    "expirationDate": { "type": "string", "format": "date-time" },
+    "credentialSubject": {
+      "type": "object",
+      "required": ["id", "creatorDID", "verificationLevel", "verifiedAt", "verificationMethod"],
+      "properties": {
+        "id":                 { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        "creatorDID":         { "type": "string" },
+        "verificationLevel":  { "type": "integer", "minimum": 0, "maximum": 3 },
+        "verifiedAt":         { "type": "string", "format": "date-time" },
+        "verificationMethod": { "type": "string", "minLength": 1 }
+      }
+    },
+    "proof": { "type": "object" }
+  }
+}

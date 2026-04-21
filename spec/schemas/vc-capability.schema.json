@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eterecitizen.ai/spec/schemas/vc-capability.schema.json",
+  "title": "EtereCitizen Capability Verifiable Credential",
+  "description": "Attests that an Agent is able to perform a specific kind of work. See SPEC.md §6.4.",
+  "type": "object",
+  "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "https://www.w3.org/2018/credentials/v1" } },
+        { "contains": { "const": "https://eterecitizen.ai/ns/vc/capability/v1" } }
+      ]
+    },
+    "id":   { "type": "string" },
+    "type": {
+      "type": "array",
+      "allOf": [
+        { "contains": { "const": "VerifiableCredential" } },
+        { "contains": { "const": "EtereCitizenCapability" } }
+      ]
+    },
+    "issuer": {
+      "oneOf": [
+        { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+      ]
+    },
+    "issuanceDate":   { "type": "string", "format": "date-time" },
+    "expirationDate": { "type": "string", "format": "date-time" },
+    "credentialSubject": {
+      "type": "object",
+      "required": ["id", "capability", "category"],
+      "properties": {
+        "id":         { "type": "string", "pattern": "^did:ethr:0x[0-9a-f]+:0x[a-fA-F0-9]{40}$" },
+        "capability": { "type": "string", "minLength": 1 },
+        "category":   { "$ref": "#/$defs/Category" }
+      }
+    },
+    "proof": { "type": "object" }
+  },
+  "$defs": {
+    "Category": {
+      "type": "string",
+      "enum": [
+        "document-analysis", "code-generation", "code-review",
+        "data-analysis", "translation", "content-creation",
+        "image-generation", "research", "customer-support",
+        "financial-analysis", "legal-analysis", "medical-analysis",
+        "education", "creative-writing", "summarization", "general"
+      ]
+    }
+  }
+}
